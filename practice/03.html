@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Access | Dual Portal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Dynamic Moving Gradient Background */
+            background: linear-gradient(-45deg, #0a0a0a, #1a1a2e, #16213e, #000000);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            overflow: hidden;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+            padding: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* The Neon Box Styling */
+        .box {
+            position: relative;
+            width: 350px;
+            height: 480px;
+            background: #1c1c1c;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Rotating Border Animation */
+        .box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 350px;
+            height: 480px;
+            background: linear-gradient(0deg, transparent, transparent, var(--clr), var(--clr), var(--clr));
+            transform-origin: bottom right;
+            animation: animate 6s linear infinite;
+        }
+
+        .box::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 350px;
+            height: 480px;
+            background: linear-gradient(0deg, transparent, transparent, var(--clr), var(--clr), var(--clr));
+            transform-origin: bottom right;
+            animation: animate 6s linear infinite;
+            animation-delay: -3s;
+        }
+
+        @keyframes animate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        form {
+            position: absolute;
+            inset: 4px;
+            background: #222;
+            padding: 50px 40px;
+            border-radius: 8px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            color: var(--clr);
+            font-weight: 500;
+            text-align: center;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .inputBox {
+            position: relative;
+            width: 100%;
+            margin-top: 35px;
+        }
+
+        .inputBox input {
+            position: relative;
+            width: 100%;
+            padding: 10px 10px 10px;
+            background: transparent;
+            outline: none;
+            border: none;
+            box-shadow: none;
+            color: #23242a;
+            font-size: 1em;
+            letter-spacing: 0.05em;
+            transition: 0.5s;
+            z-index: 10;
+        }
+
+        .inputBox span {
+            position: absolute;
+            left: 0;
+            padding: 10px 0px 10px;
+            pointer-events: none;
+            color: #8f8f8f;
+            font-size: 1em;
+            letter-spacing: 0.05em;
+            transition: 0.5s;
+        }
+
+        .inputBox input:valid ~ span,
+        .inputBox input:focus ~ span {
+            color: var(--clr);
+            font-size: 0.75em;
+            transform: translateY(-34px);
+        }
+
+        .inputBox i {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--clr);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: 0.5s;
+            pointer-events: none;
+        }
+
+        input[type="submit"] {
+            border: none;
+            outline: none;
+            padding: 10px 25px;
+            background: var(--clr);
+            cursor: pointer;
+            font-size: 0.9em;
+            border-radius: 4px;
+            font-weight: 600;
+            width: 100px;
+            margin-top: 30px;
+            color: #000;
+            box-shadow: 0 0 15px var(--clr);
+        }
+
+        /* Specific Colors */
+        .login-box { --clr: #00f0ff; } /* Cyan Neon */
+        .register-box { --clr: #d4a572; } /* Gold Neon */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- LOGIN SECTION -->
+        <div class="box login-box">
+            <form id="loginForm">
+                <h2>Login</h2>
+                <div class="inputBox">
+                    <input type="text" required="required">
+                    <span>Email Address</span>
+                    <i></i>
+                </div>
+                <div class="inputBox">
+                    <input type="password" required="required">
+                    <span>Password</span>
+                    <i></i>
+                </div>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+
+        <!-- REGISTER SECTION -->
+        <div class="box register-box">
+            <form id="regForm">
+                <h2>Register</h2>
+                <div class="inputBox">
+                    <input type="text" required="required">
+                    <span>Full Name</span>
+                    <i></i>
+                </div>
+                <div class="inputBox">
+                    <input type="text" required="required">
+                    <span>Gmail Address</span>
+                    <i></i>
+                </div>
+                <div class="inputBox">
+                    <input type="password" required="required">
+                    <span>Password</span>
+                    <i></i>
+                </div>
+                <input type="submit" value="Sign Up" style="width: 120px;">
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

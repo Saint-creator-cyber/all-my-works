@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAINT | Access Recovery</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: #050505;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* Left Side Visual */
+        .visual-side {
+            flex: 1.2;
+            background: url('https://unsplash.com') center/cover;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+        }
+
+        .visual-side::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);
+        }
+
+        /* Right Side Content */
+        .form-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background: #050505;
+        }
+
+        .recovery-vault {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* GLITCH EFFECT FOR BRAND */
+        .brand-mark {
+            color: #D4AF37;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+            margin-bottom: 60px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .brand-mark::before,
+        .brand-mark::after {
+            content: 'SAINT';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .brand-mark:hover::before {
+            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+            color: #fff;
+            z-index: -1;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 3px);
+            }
+
+            40% {
+                transform: translate(-3px, -3px);
+            }
+
+            60% {
+                transform: translate(3px, 3px);
+            }
+
+            80% {
+                transform: translate(3px, -3px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        /* TYPING EFFECT */
+        .typing-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            border-right: 2px solid #D4AF37;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            animation: typing 2s steps(30, end) forwards, blink 0.8s infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent
+            }
+        }
+
+        /* Inputs & Buttons */
+        .input-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-box input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            color: #fff;
+            font-size: 1rem;
+            transition: 0.4s;
+        }
+
+        .input-box input:focus {
+            outline: none;
+            border-bottom-color: #D4AF37;
+        }
+
+        .input-box label {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            color: #444;
+            pointer-events: none;
+            transition: 0.4s;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+        }
+
+        .input-box input:focus~label,
+        .input-box input:valid~label {
+            top: -10px;
+            color: #D4AF37;
+            font-size: 0.6rem;
+        }
+
+        .btn-vault {
+            background: none;
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            padding: 18px;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 2px;
+            width: 100%;
+            transition: 0.4s;
+        }
+
+        .btn-vault:hover {
+            background: #D4AF37;
+            color: #000;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .back-link {
+            margin-top: 30px;
+            display: block;
+            color: #444;
+            text-decoration: none;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="visual-side"></div>
+
+    <div class="form-side">
+        <div class="recovery-vault">
+            <div class="brand-mark">SAINT ACCESS RECOVERY</div>
+
+            <!-- STEP 1 -->
+            <div class="step active" id="step1">
+                <h2 class="typing-text">Lost your key?</h2>
+                <p style="color:#666; margin-bottom:40px; font-size:0.9rem;">Identity check required for restoration.
+                </p>
+                <div class="input-box">
+                    <input type="email" id="email" required>
+                    <label>Email Address</label>
+                </div>
+                <button class="btn-vault" onclick="nextStep(2)">REQUEST CODE</button>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step" id="step2">
+                <h2 class="typing-text">Verification</h2>
+                <p style="color:#666; margin-bottom:40px; font-size:0.9rem;">Enter the security signature code.</p>
+                <div class="input-box">
+                    <input type="text" maxlength="6" id="code" required>
+                    <label>6-Digit Code</label>
+                </div>
+                <button class="btn-vault" onclick="nextStep(3)">AUTHORIZE RESET</button>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step" id="step3">
+                <h2 class="typing-text">New Protocol</h2>
+                <p style="color:#666; margin-bottom:40px; font-size:0.9rem;">Update your security access key.</p>
+                <div class="input-box">
+                    <input type="password" id="newPass" required>
+                    <label>New Password</label>
+                </div>
+                <button class="btn-vault" onclick="finish()">FINALIZE RECOVERY</button>
+            </div>
+
+            <a href="buologinpage.html" class="back-link">← RETURN TO ENTRANCE</a>
+        </div>
+    </div>
+
+    <script>
+        function nextStep(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            const targetStep = document.getElementById('step' + step);
+            targetStep.classList.add('active');
+
+            // Re-trigger typing animation
+            const h2 = targetStep.querySelector('.typing-text');
+            h2.style.animation = 'none';
+            h2.offsetHeight; /* trigger reflow */
+            h2.style.animation = null;
+        }
+
+        function finish() {
+            localStorage.setItem('saint_user_password', document.getElementById('newPass').value);
+            alert("Security Protocol Updated.");
+            window.location.href = "buologinpage.html";
+        }
+    </script>
+</body>
+
+</html>

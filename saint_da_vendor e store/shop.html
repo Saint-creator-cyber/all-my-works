@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <title>Shop | saint_da_vendor Marketplace</title>
+  <style>
+   
+    :root {
+      color-scheme: dark;
+      --bg: #0e1221;
+      --surface: #151b34;
+      --surface-soft: #1e2747;
+      --text: #f5f7ff;
+      --muted: #a2aec7;
+      --accent: #7f5af0;
+      --accent-soft: rgba(127, 90, 240, 0.15);
+      --border: rgba(255, 255, 255, 0.08);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, rgba(127, 90, 240, 0.18), transparent 30%),
+        linear-gradient(180deg, #101426 0%, #0b101f 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+      cursor: default;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 48px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .brand span {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .cart-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1.2rem;
+    }
+
+    .cart-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #ef4444;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    nav a,
+    .button {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: var(--accent);
+      transition: transform 0.2s ease, background 0.2s ease;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      background: #6246ea;
+    }
+
+    .button-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .button-secondary:hover {
+      background: var(--surface-soft);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .shop-header {
+      margin-bottom: 40px;
+    }
+
+    .shop-header h1 {
+      font-size: clamp(2rem, 3vw, 3rem);
+      margin-bottom: 12px;
+      letter-spacing: -0.06em;
+    }
+
+    .shop-header p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .marketplace-stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding: 20px 24px;
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    .stat-box {
+      text-align: center;
+    }
+
+    .stat-box .number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-box .label {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+
+    .account-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+
+    .account-card:hover {
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-4px);
+    }
+
+    .account-preview {
+      width: 100%;
+      height: 160px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .account-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .account-info {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+    }
+
+    .platform {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .platform h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .platform-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--accent-soft);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+
+    .account-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-item strong {
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .account-desc {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .price-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 12px;
+    }
+
+    .price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .buy-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .buy-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .no-results h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 18px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer a:hover {
+      color: var(--accent);
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toast {
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      animation: slideIn 0.3s ease;
+      min-width: 280px;
+    }
+
+    .toast-icon {
+      font-size: 1.4rem;
+    }
+
+    .toast-content h4 {
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .toast-content p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .toast-close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 4px;
+    }
+
+    .toast-close:hover {
+      color: var(--text);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 850px) {
+      .shop-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 24px 16px 36px;
+      }
+
+      .shop-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .shop-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filters {
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <a href="home%20menu.html" style="text-decoration: none;">
+        <div class="brand">
+          <span></span>
+          saint_da_vendor
+        </div>
+      </a>
+      <nav>
+        <a class="button button-secondary" href="home%20menu.html">Home</a>
+        <div class="nav-actions">
+          <button class="cart-btn" onclick="showCart()" title="Shopping Cart">
+            🛒
+            <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+          </button>
+          <div id="userArea">
+            <a class="button" href="login.html">Login/Register</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <section class="shop-header">
+      <h1>Social Media Accounts Marketplace</h1>
+      <p>Premium, verified social media accounts ready for immediate use. All accounts come with guaranteed access and transfer assistance.</p>
+    </section>
+
+    <div class="marketplace-stats">
+      <div class="stat-box">
+        <div class="number">2,500+</div>
+        <div class="label">Accounts Sold</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">99.8%</div>
+        <div class="label">Success Rate</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">24/7</div>
+        <div class="label">Support</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">12</div>
+        <div class="label">Platforms</div>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Search accounts by name, platform, or niche..." id="searchInput" oninput="searchAccounts()">
+    </div>
+
+    <section class="filters">
+      <button class="filter-btn active" onclick="filterByPlatform('all', event)">All Platforms</button>
+      <button class="filter-btn" onclick="filterByPlatform('instagram', event)">📷 Instagram</button>
+      <button class="filter-btn" onclick="filterByPlatform('tiktok', event)">🎵 TikTok</button>
+      <button class="filter-btn" onclick="filterByPlatform('twitter', event)">𝕏 Twitter/X</button>
+      <button class="filter-btn" onclick="filterByPlatform('youtube', event)">▶️ YouTube</button>
+      <button class="filter-btn" onclick="filterByPlatform('twitch', event)">🎮 Twitch</button>
+      <button class="filter-btn" onclick="filterByPlatform('facebook', event)">f Facebook</button>
+      <button class="filter-btn" onclick="filterByPlatform('whatsapp', event)">💬 WhatsApp</button>
+      <button class="filter-btn" onclick="filterByPlatform('zangi', event)">📞 Zangi</button>
+      <button class="filter-btn" onclick="filterByPlatform('netflix', event)">🎬 Netflix</button>
+      <button class="filter-btn" onclick="filterByPlatform('snapchat', event)">👻 Snapchat</button>
+      <button class="filter-btn" onclick="filterByPlatform('gaming', event)">🎮 Gaming</button>
+    </section>
+
+    <section class="shop-grid" id="shopGrid">
+      <!-- Instagram Accounts -->
+      <article class="account-card" data-platform="instagram">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" alt="Instagram"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Fashion & Lifestyle</h3>
+            <span class="platform-badge">Instagram</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>245K</strong>
+              Followers
+            </div>
+            <div class="stat-item">
+              <strong>8.2%</strong>
+              Engagement
+            </div>
+          </div>
+          <p class="account-desc">Established fashion and lifestyle account with highly engaged audience. Niche: Fashion, travel, lifestyle content.</p>
+          <div class="price-section">
+            <span class="price">#31,299</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="account-card" data-platform="instagram">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" alt="Instagram"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Beauty & Cosmetics</h3>
+            <span class="platform-badge">Instagram</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>189K</strong>
+              Followers
+            </div>
+            <div class="stat-item">
+              <strong>9.1%</strong>
+              Engagement
+            </div>
+          </div>
+          <p class="account-desc">Beauty and makeup focused account. Verified ticks available. Strong brand collaboration history.</p>
+          <div class="price-section">
+            <span class="price">#66,899</span>
+            <button class="buy-btn">Buy Now</button>
+            
+          </div>
+        </div>
+      </article>
+
+      <article class="account-card" data-platform="instagram">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" alt="Instagram"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Fitness & Wellness</h3>
+            <span class="platform-badge">Instagram</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>567K</strong>
+              Followers
+            </div>
+            <div class="stat-item">
+              <strong>7.5%</strong>
+              Engagement
+            </div>
+          </div>
+          <p class="account-desc">Popular fitness influencer account. Gym and wellness content creator. Premium partnership deals available.</p>
+          <div class="price-section">
+            <span class="price">#2,499</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- TikTok Accounts -->
+      <article class="account-card" data-platform="tiktok">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=800&q=80" alt="TikTok"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Comedy & Entertainment</h3>
+            <span class="platform-badge">TikTok</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>1.2M</strong>
+              Followers
+            </div>
+            <div class="stat-item">
+              <strong>12.3%</strong>
+              Engagement
+            </div>
+          </div>
+          <p class="account-desc">Comedy content creator with viral potential. Consistent upload schedule. Trending content on platform.</p>
+          <div class="price-section">
+            <span class="price">#3,599</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="account-card" data-platform="tiktok">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=800&q=80" alt="TikTok"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Dance & Music</h3>
+            <span class="platform-badge">TikTok</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>856K</strong>
+              Followers
+            </div>
+            <div class="stat-item">
+              <strong>11.8%</strong>
+              Engagement
+            </div>
+          </div>
+          <p class="account-desc">Dance and music content creator. Multiple viral videos with 100M+ views. Brand partnership ready.</p>
+          <div class="price-section">
+            <span class="price">#2,199</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Twitter/X Accounts -->
+      <article class="account-card" data-platform="twitter">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1611605698335-8b15698118f6?auto=format&fit=crop&w=800&q=80" alt="Twitter"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Tech News & Updates</h3>
+            <span class="platform-badge">Twitter/X</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>298K</strong>
+              Followers
+            </div>
+            <div class="stat-item">
+              <strong>6.4%</strong>
+              Engagement
+            </div>
+          </div>
+          <p class="account-desc">Technology news and updates account. Industry authority. Monetized with verified status.</p>
+          <div class="price-section">
+            <span class="price">#1,599</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="account-card" data-platform="twitter">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1611605698335-8b15698118f6?auto=format&fit=crop&w=800&q=80" alt="Twitter"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Business & Marketing</h3>
+            <span class="platform-badge">Twitter/X</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>445K</strong>
+              Followers
+            </div>
+            <div class="stat-item">
+              <strong>5.9%</strong>
+              Engagement
+            </div>
+          </div>
+          <p class="account-desc">Business and marketing focused account with B2B audience. Leadership insights and industry commentary.</p>
+          <div class="price-section">
+            <span class="price">#1,799</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- YouTube Accounts -->
+      <article class="account-card" data-platform="youtube">
+        <div class="account-preview">▶️</div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Gaming & Esports</h3>
+            <span class="platform-badge">YouTube</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>523K</strong>
+              Subscribers
+            </div>
+            <div class="stat-item">
+              <strong>45M+</strong>
+              Total Views
+            </div>
+          </div>
+          <p class="account-desc">Gaming and esports channel. Monetized with consistent upload history. Sponsorship ready.</p>
+          <div class="price-section">
+            <span class="price">#4,299</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="account-card" data-platform="youtube">
+        <div class="account-preview">▶️</div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Education & Tutorials</h3>
+            <span class="platform-badge">YouTube</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>287K</strong>
+              Subscribers
+            </div>
+            <div class="stat-item">
+              <strong>12.3M</strong>
+              Total Views
+            </div>
+          </div>
+          <p class="account-desc">Educational content channel. Growing subscriber base. Ad revenue enabled.</p>
+          <div class="price-section">
+            <span class="price">#2,899</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Twitch Accounts -->
+      <article class="account-card" data-platform="twitch">
+        <div class="account-preview">🎮</div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Streaming & Gaming</h3>
+            <span class="platform-badge">Twitch</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>156K</strong>
+              Followers
+            </div>
+            <div class="stat-item">
+              <strong>2.5K</strong>
+              Avg Viewers
+            </div>
+          </div>
+          <p class="account-desc">Established streamer account with affiliate status. Regular streaming schedule and loyal community.</p>
+          <div class="price-section">
+            <span class="price">#1,899</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Facebook Accounts -->
+      <article class="account-card" data-platform="facebook">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1633675254053-d96c7668c3b8?auto=format&fit=crop&w=800&q=80" alt="Facebook"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Community Group</h3>
+            <span class="platform-badge">Facebook</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>78K</strong>
+              Members
+            </div>
+            <div class="stat-item">
+              <strong>Daily Active</strong>
+              3.2K
+            </div>
+          </div>
+          <p class="account-desc">Active community group. Engaged member base. Monetization options available.</p>
+          <div class="price-section">
+            <span class="price">#799</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="account-card" data-platform="facebook">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1633675254053-d96c7668c3b8?auto=format&fit=crop&w=800&q=80" alt="Facebook"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Business Page</h3>
+            <span class="platform-badge">Facebook</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>124K</strong>
+              Followers
+            </div>
+            <div class="stat-item">
+              <strong>8.7%</strong>
+              Engagement
+            </div>
+          </div>
+          <p class="account-desc">Established business page with verified status. Strong customer base and positive reviews.</p>
+          <div class="price-section">
+            <span class="price">#1,099</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- WhatsApp Accounts -->
+      <article class="account-card" data-platform="whatsapp">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1614680376739-414d95ff43df?auto=format&fit=crop&w=800&q=80" alt="WhatsApp"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Business Number</h3>
+            <span class="platform-badge">WhatsApp</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>Verified</strong>
+              Number
+            </div>
+            <div class="stat-item">
+              <strong>Active</strong>
+              Status
+            </div>
+          </div>
+          <p class="account-desc">Verified WhatsApp business number with transfer assistance. Perfect for customer communication.</p>
+          <div class="price-section">
+            <span class="price">#199</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Zangi Accounts -->
+      <article class="account-card" data-platform="zangi">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1614680376739-414d95ff43df?auto=format&fit=crop&w=800&q=80" alt="Zangi"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>VOIP Number</h3>
+            <span class="platform-badge">Zangi</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>Premium</strong>
+              Account
+            </div>
+            <div class="stat-item">
+              <strong>Credits</strong>
+              Included
+            </div>
+          </div>
+          <p class="account-desc">Premium Zangi VOIP account with calling credits. International calling capabilities.</p>
+          <div class="price-section">
+            <span class="price">#99</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Netflix Accounts -->
+      <article class="account-card" data-platform="netflix">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=800&q=80" alt="Netflix"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Premium Account</h3>
+            <span class="platform-badge">Netflix</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>4K</strong>
+              Quality
+            </div>
+            <div class="stat-item">
+              <strong>5 Devices</strong>
+              Max
+            </div>
+          </div>
+          <p class="account-desc">Premium Netflix account with 4K streaming and multiple device support. Transfer assistance provided.</p>
+          <div class="price-section">
+            <span class="price">#49.99</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Snapchat Accounts -->
+      <article class="account-card" data-platform="snapchat">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=800&q=80" alt="Snapchat"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Premium Account</h3>
+            <span class="platform-badge">Snapchat</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>50K+</strong>
+              Friends
+            </div>
+            <div class="stat-item">
+              <strong>High Score</strong>
+              Streaks
+            </div>
+          </div>
+          <p class="account-desc">Popular Snapchat account with large friend network and active streaks. Premium filters unlocked.</p>
+          <div class="price-section">
+            <span class="price">#299</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Gaming Accounts -->
+      <article class="account-card" data-platform="gaming">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=800&q=80" alt="Call of Duty"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Call of Duty Account</h3>
+            <span class="platform-badge">Gaming</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>Level 50+</strong>
+              Player Level
+            </div>
+            <div class="stat-item">
+              <strong>Premium</strong>
+              Edition
+            </div>
+          </div>
+          <p class="account-desc">High-level Call of Duty account with premium unlocks and battle pass progress. Ready for competitive play.</p>
+          <div class="price-section">
+            <span class="price">#299</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="account-card" data-platform="gaming">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80" alt="Free Fire"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>Free Fire Account</h3>
+            <span class="platform-badge">Gaming</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>Elite Pass</strong>
+              Active
+            </div>
+            <div class="stat-item">
+              <strong>1000+</strong>
+              Diamonds
+            </div>
+          </div>
+          <p class="account-desc">Premium Free Fire account with elite pass and diamond currency. Rare skins and weapons included.</p>
+          <div class="price-section">
+            <span class="price">#199</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="account-card" data-platform="gaming">
+        <div class="account-preview"><img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80" alt="eFootball"></div>
+        <div class="account-info">
+          <div class="platform">
+            <h3>eFootball Account</h3>
+            <span class="platform-badge">Gaming</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat-item">
+              <strong>500+</strong>
+              Players
+            </div>
+            <div class="stat-item">
+              <strong>Premium</strong>
+              Club
+            </div>
+          </div>
+          <p class="account-desc">Established eFootball club with premium players and stadium. Transfer assistance included.</p>
+          <div class="price-section">
+            <span class="price">#149</span>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <div>© 2026 saint_da_vendor. All rights reserved. | All accounts are sold with transfer assistance and 30-day access guarantee.</div>
+      <div>
+        <a href="home%20menu.html">Home</a> ·
+         
+        <a href="privacy.html">privacy policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    const currentUser = JSON.parse(localStorage.getItem('saint_da_vendor_current_user'));
+
+    function showToast(icon, title, message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <div class="toast-content">
+          <h4>${title}</h4>
+          <p>${message}</p>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById('cartBadge');
+      if (!currentUser) {
+        badge.style.display = 'none';
+        return;
+      }
+      const cartKey = `saint_da_vendor_cart_${currentUser.email}`;
+      const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+      if (cart.length > 0) {
+        badge.textContent = cart.length;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function showCart() {
+      if (!currentUser) {
+        showToast('🔐', 'Login Required', 'Please login to view your cart');
+        return;
+      }
+      const cartKey = `saint_da_vendor_cart_${currentUser.email}`;
+      const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+      if (cart.length === 0) {
+        showToast('🛒', 'Cart Empty', 'No items in your cart yet');
+      } else {
+        const items = cart.map(item => `• ${item.name} - ${item.price}`).join('\n');
+        showToast('🛒', `Cart (${cart.length})`, cart[0].name + (cart.length > 1 ? ` +${cart.length - 1} more` : ''));
+      }
+    }
+
+    const userArea = document.getElementById('userArea');
+    if (currentUser) {
+      const initials = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+      userArea.innerHTML = `
+        <div class="user-avatar" title="${currentUser.name}">${initials}</div>
+        <a class="button" href="account.html">My Account</a>
+      `;
+      updateCartBadge();
+    }
+
+    function filterByPlatform(platform, e) {
+      const cards = document.querySelectorAll('.account-card');
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      if (e && e.target) e.target.classList.add('active');
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      cards.forEach(card => {
+        const matchesPlatform = platform === 'all' || card.getAttribute('data-platform') === platform;
+        const cardText = card.textContent.toLowerCase();
+        const matchesSearch = cardText.includes(searchQuery);
+        if (matchesPlatform && matchesSearch) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function searchAccounts() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.account-card');
+      const activeFilter = document.querySelector('.filter-btn.active');
+      const platform = activeFilter ? activeFilter.textContent.toLowerCase().replace('📷 ', '').replace('🎵 ', '').replace('𝕏 ', '').replace('▶️ ', '').replace('🎮 ', '').replace('f ', '').replace('💬 ', '').replace('📞 ', '').replace('🎬 ', '').replace('👻 ', '').trim() : 'all';
+      const platformMap = {
+        'all platforms': 'all',
+        'instagram': 'instagram',
+        'tiktok': 'tiktok',
+        'twitter/x': 'twitter',
+        'youtube': 'youtube',
+        'twitch': 'twitch',
+        'facebook': 'facebook',
+        'whatsapp': 'whatsapp',
+        'zangi': 'zangi',
+        'netflix': 'netflix',
+        'snapchat': 'snapchat',
+        'gaming': 'gaming'
+      };
+      const platformKey = Object.keys(platformMap).find(k => platform.includes(k.replace(' ', ''))) || 'all';
+      cards.forEach(card => {
+        const cardText = card.textContent.toLowerCase();
+        const cardPlatform = card.getAttribute('data-platform');
+        if (cardText.includes(query) && (platformKey === 'all' || cardPlatform === platformKey)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    document.querySelectorAll('.buy-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        if (!currentUser) {
+          showToast('🔐', 'Login Required', 'Please login to add items to cart');
+          setTimeout(() => window.location.href = 'login.html', 1500);
+          return;
+        }
+        const itemName = this.closest('.account-info').querySelector('h3').textContent;
+        const itemPrice = this.closest('.account-info').querySelector('.price').textContent;
+        const itemDesc = this.closest('.account-info').querySelector('.account-desc').textContent;
+        const cartItem = {
+          name: itemName,
+          description: itemDesc.substring(0, 50) + '...',
+          price: itemPrice,
+          addedAt: new Date().toISOString()
+        };
+        const cartKey = `saint_da_vendor_cart_${currentUser.email}`;
+        const currentCart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+        currentCart.push(cartItem);
+        localStorage.setItem(cartKey, JSON.stringify(currentCart));
+        updateCartBadge();
+        showToast('✅', 'Added to Cart', `${itemName} has been added`);
+        this.textContent = 'Added!';
+        this.style.background = '#22c55e';
+        this.style.borderColor = '#22c55e';
+        this.style.color = 'white';
+        setTimeout(() => {
+          this.textContent = 'Buy Now';
+          this.style.background = '';
+          this.style.borderColor = '';
+          this.style.color = '';
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <title>saint_da_vendor | Marketplace</title>
+  <style>
+    .no-edit {
+    pointer-events: none;
+}
+.no-edit {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+    :root {
+      color-scheme: dark;
+      --bg: #0e1221;
+      --surface: #151b34;
+      --surface-soft: #1e2747;
+      --text: #f5f7ff;
+      --muted: #a2aec7;
+      --accent: #7f5af0;
+      --accent-soft: rgba(127, 90, 240, 0.15);
+      --border: rgba(255, 255, 255, 0.08);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, rgba(127, 90, 240, 0.18), transparent 30%),
+        linear-gradient(180deg, #101426 0%, #0b101f 100%);
+      color: var(--text);
+      line-height: 1.6;
+      cursor: default;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 48px;
+      cursor: default;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      cursor: default;
+    }
+
+    .brand span {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    nav a,
+    .button {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: var(--accent);
+      transition: transform 0.2s ease, background 0.2s ease;
+      cursor:default ;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      background: #6246ea;
+    }
+
+    .button-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .button-secondary:hover {
+      background: var(--surface-soft);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .menu-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .menu-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .menu-button:hover {
+      background: var(--surface-soft);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .menu-button::after {
+      content: "▼";
+      font-size: 0.7rem;
+      transition: transform 0.2s ease;
+    }
+
+    .menu-button.open::after {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      min-width: 200px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 12px 16px;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background: var(--surface-soft);
+    }
+
+    .dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      color: #ff6b6b;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 107, 107, 0.1);
+      color: #ff4444;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 60px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 4vw, 4.25rem);
+      max-width: 10ch;
+      margin-bottom: 20px;
+      letter-spacing: -0.06em;
+    }
+
+    .hero p {
+      max-width: 620px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      font-size: 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 32px;
+      min-height: 420px;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -30% -40%;
+      background: radial-gradient(circle, rgba(127, 90, 240, 0.18), transparent 45%);
+      pointer-events: none;
+    }
+
+    .hero-card h2 {
+      margin-bottom: 18px;
+      font-size: 1.3rem;
+    }
+
+    .hero-card p {
+      color: var(--muted);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 60px;
+    }
+
+    .feature {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      min-height: 170px;
+    }
+
+    .feature h3 {
+      margin-bottom: 12px;
+      font-size: 1.05rem;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 60px;
+    }
+
+    .product-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 18px;
+    }
+
+    .product-card h4 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .product-card span {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 18px;
+      margin-bottom: 60px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 26px 22px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.7rem;
+      margin-bottom: 8px;
+    }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 18px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    @media (max-width: 850px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        min-height: auto;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 24px 16px 36px;
+      }
+
+      .hero h1 {
+        font-size: 2.7rem;
+      }
+    }
+    body {
+      background-image: url('https://tagembed.com/blog/wp-content/uploads/2024/04/top-social-media-website-1-1.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <span></span>
+        saint_da_vendor
+      </div>
+      <nav>
+        <div class="menu-dropdown">
+          <button class="menu-button" id="accountMenuBtn">
+            Account Menu
+          </button>
+          <div class="dropdown-content" id="accountDropdown">
+            You are not logged in
+            <a href="#" class="dropdown-item">Orders</a>
+            <a href="tel:07078278191" class="dropdown-item">📞 Call Support: 07078278191</a>
+            <a href="https://wa.me/07078278191" class="dropdown-item">💬 WhatsApp: 07078278191</a>
+            <a href="mailto:ao2240800@gmail.com" class="dropdown-item">📧 Email Support: ao2240800@gmail.com</a>
+          </div>
+        </div>
+        <a class="button" href="login.html">Login/Register</a>
+        <a class="button" href="shop.html">Browse Shop</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+       <h2> <p style="color: var(--accent); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.85rem; margin-bottom: 18px;">Trusted vendor marketplace</p></h2>
+        <h2>Clearly curated commerce for modern sellers and buyers.</h2>
+        <p>saint_da_vendor is a refined e-store environment built to showcase premium products, simplify onboarding, and help customers shop with confidence.</p>
+        <div class="hero-actions">
+          <a class="button" href="shop.html">Browse products</a>
+          <a class="button" href="account.html"> 👤my account</a>
+        </div>
+      </div>
+
+      <article class="hero-card">
+        <h2>Why choose saint_da_vendor?</h2>
+        <p>Our marketplace brings together trusted vendors, clear product discovery, and a calm shopping experience. Everything is designed to feel polished and professional from the first click.</p>
+        <ul style="margin-top: 24px; list-style: none; display: grid; gap: 14px;">
+          <li>• Smooth vendor onboarding and product publishing</li>
+          <li>• Elegant product previews with premium styling</li>
+          <li>• Intentional shop flow for confident conversions</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="feature-grid">
+      <article class="feature">
+        <h3>Premium presentation</h3>
+        <p>Showcase products with a mature layout that emphasizes detail, price, and trust.</p>
+      </article>
+      <article class="feature">
+        <h3>Vendor-first marketplace</h3>
+        <p>Designed for sellers who want a polished storefront with clear calls to action and buyer confidence.</p>
+      </article>
+      <article class="feature">
+        <h3>Fast access</h3>
+        <p>Simple links and easy navigation make sign-in and shopping effortless for returning customers.</p>
+      </article>
+    </section>
+
+    <section>
+      <h2 style="margin-bottom: 24px;">Featured Accounts</h2>
+      <div class="products">
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1633675254053-d96c7668c3b8?auto=format&fit=crop&w=800&q=80" alt="Facebook business page" />
+          <h4>Facebook Business Page</h4>
+          <span>#1,099</span>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=800&q=80" alt="TikTok comedy account" />
+          <h4>TikTok Comedy & Entertainment</h4>
+          <span>#3,599</span>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" alt="Instagram fashion account" />
+          <h4>Instagram Fashion & Lifestyle</h4>
+          <span>#1,299</span>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=800&q=80" alt="Netflix premium account" />
+          <h4>Netflix Premium Account</h4>
+          <span>#49.99</span>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1614680376739-414d95ff43df?auto=format&fit=crop&w=800&q=80" alt="WhatsApp business number" />
+          <h4>WhatsApp Business Number</h4>
+          <span>#199</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="stats">
+      <article class="stat">
+        <strong>4.9/5</strong>
+        Customer satisfaction
+      </article>
+      <article class="stat">
+        <strong>120+</strong>
+        Vendor partners
+      </article>
+      <article class="stat">
+        <strong>5000+</strong>
+        Products listed
+      </article>
+    </section>
+
+    <footer class="footer">
+      <div>© 2026 saint_da_vendor. All rights reserved.</div>
+      <div>
+        <a href="privacy.html">Privacy Policy</a> |
+        <a href="shop.html">Shop</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Check login status and update navigation
+    const currentUser = JSON.parse(localStorage.getItem('saint_da_vendor_current_user'));
+    const nav = document.querySelector('nav');
+
+    if (currentUser) {
+      // User is logged in - replace login button with blank space for account menu
+      const loginBtn = nav.querySelector('a[href="login.html"]');
+      if (loginBtn) {
+        loginBtn.outerHTML = '<a class="button" href="account.html">👤 My Account</a>';
+      }
+
+      // Update dropdown to show logged in user options
+      const accountDropdown = document.getElementById('accountDropdown');
+      if (accountDropdown) {
+        accountDropdown.innerHTML = `
+          <a href="account.html" class="dropdown-item">👤 ${currentUser.username}</a>
+          <a href="account.html" class="dropdown-item">📦 My Orders</a>
+          <a href="account.html" class="dropdown-item">🛒 Shopping Cart</a>
+          <a href="tel:07078278191" class="dropdown-item">📞 Call Support: 07078278191</a>
+          <a href="https://wa.me/07078278191" class="dropdown-item">💬 WhatsApp: 07078278191</a>
+          <a href="mailto:ao2240800@gmail.com" class="dropdown-item">📧 Email Support: ao2240800@gmail.com</a>
+          <button class="dropdown-item logout-btn" onclick="logout()"> Logout</button>
+        `;
+      }
+    }
+
+    // Dropdown menu functionality
+    const accountMenuBtn = document.getElementById('accountMenuBtn');
+    const accountDropdown = document.getElementById('accountDropdown');
+
+    if (accountMenuBtn && accountDropdown) {
+      accountMenuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('open');
+        accountDropdown.classList.toggle('show');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!accountMenuBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
+          accountMenuBtn.classList.remove('open');
+          accountDropdown.classList.remove('show');
+        }
+      });
+
+      // Close dropdown on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          accountMenuBtn.classList.remove('open');
+          accountDropdown.classList.remove('show');
+        }
+      });
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('saint_da_vendor_current_user');
+      location.reload(); // Refresh page to update navigation
+    }
+  </script>
+
+
+
+</body>
+</html>

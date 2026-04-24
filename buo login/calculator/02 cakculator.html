@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate All-in-One Solver</title>
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        :root {
+            --bg: #09090b;
+            --card: #18181b;
+            --text: #ffffff;
+            --accent: #10b981;
+            --op: #f59e0b;
+            --sci: #6366f1;
+            --btn: #27272a;
+            --input: #09090b;
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f4f5;
+            --card: #ffffff;
+            --text: #18181b;
+            --accent: #059669;
+            --op: #d97706;
+            --sci: #4f46e5;
+            --btn: #e4e4e7;
+            --input: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            transition: 0.3s;
+            margin: 0;
+        }
+
+        /* Privacy Lock */
+        #lock-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: 0.5s;
+        }
+
+        .pin-input {
+            font-size: 2rem;
+            background: var(--btn);
+            border: 2px solid var(--accent);
+            color: var(--text);
+            text-align: center;
+            width: 180px;
+            border-radius: 12px;
+            padding: 15px;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+
+        .panel {
+            background: var(--card);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Navigation Tabs */
+        .modes {
+            display: flex;
+            gap: 5px;
+            background: var(--input);
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            border: none;
+            background: none;
+            color: var(--text);
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: white;
+            opacity: 1;
+        }
+
+        .display-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .display {
+            width: 100%;
+            height: 70px;
+            font-size: 1.8rem;
+            text-align: right;
+            padding: 15px;
+            border: none;
+            border-radius: 16px;
+            background: var(--input);
+            color: var(--text);
+            outline: none;
+            box-sizing: border-box;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+        }
+
+        .mic-btn {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.5;
+        }
+
+        .mic-btn.active {
+            color: #ef4444;
+            opacity: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: translateY(-50%) scale(1);
+            }
+
+            50% {
+                transform: translateY(-50%) scale(1.2);
+            }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            background: var(--btn);
+            color: var(--text);
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+        }
+
+        .op {
+            background: var(--op);
+            color: white;
+        }
+
+        .sci {
+            background: var(--sci);
+            color: white;
+            font-size: 0.85rem;
+        }
+
+        .eq {
+            background: var(--accent);
+            color: white;
+            grid-column: span 2;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            background: var(--input);
+            color: var(--text);
+            box-sizing: border-box;
+        }
+
+        canvas {
+            background: var(--input);
+            border-radius: 16px;
+            margin-top: 15px;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .const-btn {
+            padding: 8px;
+            font-size: 0.75rem;
+            background: var(--btn);
+        }
+    </style>
+</head>
+
+<body data-theme="dark">
+
+    <div id="lock-screen">
+        <h2>Locked</h2>
+        <input type="password" id="pin" class="pin-input" maxlength="4" placeholder="PIN">
+        <button onclick="unlock()"
+            style="background: var(--accent); color: white; padding: 12px 60px; border-radius: 10px;">Access
+            System</button>
+        <p style="margin-top: 15px; opacity: 0.5;">Default PIN: 1234</p>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-bottom: 20px;">
+        <button onclick="toggleTheme()">🌓 Toggle Theme</button>
+        <button onclick="changePin()">🔑 Change PIN</button>
+    </div>
+
+    <div class="app-container">
+        <!-- CALCULATOR & FORMULAS PANEL -->
+        <div class="panel">
+            <div class="modes">
+                <button class="mode-btn active" onclick="switchTab('calc', this)">Math</button>
+                <button class="mode-btn" onclick="switchTab('unit', this)">Units & FX</button>
+                <button class="mode-btn" onclick="switchTab('graph', this)">Graph</button>
+            </div>
+
+            <div id="calc-tab">
+                <div style="display:flex; gap:5px; margin-bottom:10px; overflow-x:auto;">
+                    <button class="const-btn" onclick="runFormula('pythagoras')">a²+b²</button>
+                    <button class="const-btn" onclick="runFormula('circle')">Circle</button>
+                    <button class="const-btn" onclick="press('Math.PI')">π</button>
+                    <button class="const-btn" onclick="press('Math.E')">e</button>
+                </div>
+                <div class="display-container">
+                    <button id="mic" class="mic-btn" onclick="startVoice()">🎙️</button>
+                    <input type="text" id="screen" class="display" placeholder="0" readonly>
+                </div>
+                <div class="grid">
+                    <button onclick="cls()" style="background:#ef4444; color:white">C</button>
+                    <button class="sci" onclick="press('Math.sqrt(')">√</button>
+                    <button class="sci" onclick="press('%')">%</button>
+                    <button class="op" onclick="press('/')">÷</button>
+                    <button class="sci" onclick="press('Math.sin(')">sin</button>
+                    <button class="sci" onclick="press('Math.pow(')">xʸ</button>
+                    <button class="sci" onclick="press(',')">,</button>
+                    <button class="op" onclick="press('*')">×</button>
+                    <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button
+                        onclick="press('9')">9</button>
+                    <button class="op" onclick="press('-')">−</button>
+                    <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button
+                        onclick="press('6')">6</button>
+                    <button class="op" onclick="press('+')">+</button>
+                    <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button
+                        onclick="press('3')">3</button>
+                    <button class="eq" onclick="solve()">SOLVE (=)</button>
+                    <button onclick="press('0')">0</button><button onclick="press('.')">.</button>
+                </div>
+            </div>
+
+            <div id="unit-tab" style="display:none">
+                <input type="number" id="unitVal" placeholder="Enter Amount" oninput="convertFX()">
+                <select id="unitFrom" onchange="convertFX()">
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                </select>
+                <select id="unitTo" onchange="convertFX()">
+                    <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
+                    <option value="GBP">GBP</option>
+                    <option value="JPY">JPY</option>
+                    <option value="INR">INR</option>
+                    <option value="AUD">AUD</option>
+                    <option value="CAD">CAD</option>
+                    <option value="CHF">CHF</option>
+                    <option value="CNY">CNY</option>
+                    <option value="HKD">HKD</option>
+                    <option value="NZD">NZD</option>
+                    <option value="RUB">RUB</option>
+                    <option value="SGD">SGD</option>
+                    <option value="ZAR">ZAR</option>
+                    <option value="KRW">KRW</option>
+                    <option value="naira"> naira</option>
+                    <option value="peso"> peso</option>
+                    <option value="rupee"> rupee</option>
+                    <option value="won"> won</option>
+                    <option value="yen"> yen</option>
+                    <option value="yuan"> yuan</option>
+
+                </select>
+                <div id="unitRes" style="text-align:center; font-size:1.5rem; margin:15px; color:var(--accent)">0.00
+                </div>
+            </div>
+
+            <div id="graph-tab" style="display:none">
+                <input type="text" id="graphFunc" placeholder="Function e.g. Math.sin(x)" value="Math.sin(x)">
+                <button class="eq" style="width:100%; margin-top:10px" onclick="plotGraph()">Plot Graph</button>
+                <canvas id="graphCanvas" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- DATA VISUALIZER & HISTORY -->
+        <div class="panel">
+            <h4>📊 Data Visualizer</h4>
+            <input type="text" id="chartLabels" placeholder="Labels (e.g. Rent, Food, Fun)">
+            <input type="text" id="chartData" placeholder="Values (e.g. 300, 200, 100)">
+            <div style="display:flex; gap:10px; margin: 10px 0;">
+                <button style="flex:1" onclick="drawChart('bar')">Bar Chart</button>
+                <button style="flex:1" onclick="drawChart('pie')">Pie Chart</button>
+            </div>
+            <canvas id="dataChart"></canvas>
+
+            <h4 style="margin-top:20px; border-top:1px solid #333; padding-top:15px">📜 History</h4>
+            <div id="historyLog" style="max-height: 150px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentPin = "1234";
+        let activeChart = null;
+        const screen = document.getElementById('screen');
+
+        // SECURITY
+        function unlock() {
+            if (document.getElementById('pin').value === currentPin) {
+                document.getElementById('lock-screen').style.opacity = '0';
+                setTimeout(() => document.getElementById('lock-screen').style.display = 'none', 500);
+            } else alert("Invalid PIN!");
+        }
+        function changePin() {
+            if (prompt("Current PIN:") === currentPin) {
+                const n = prompt("New 4-Digit PIN:");
+                if (n && n.length === 4) { currentPin = n; alert("PIN Changed!"); }
+            }
+        }
+
+        // INTERFACE
+        function switchTab(tab, btn) {
+            ['calc', 'unit', 'graph'].forEach(t => document.getElementById(t + '-tab').style.display = 'none');
+            document.getElementById(tab + '-tab').style.display = tab === 'unit' ? 'block' : 'block';
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (tab === 'unit') document.getElementById('unit-tab').style.display = 'block';
+            if (tab === 'graph') document.getElementById('graph-tab').style.display = 'block';
+        }
+        function toggleTheme() { document.body.dataset.theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark'; }
+
+        // MATH CORE
+        function press(v) { screen.value += v; }
+        function cls() { screen.value = ''; }
+        function solve() {
+            try {
+                let exp = screen.value.replace('%', '/100');
+                let open = (exp.match(/\(/g) || []).length;
+                let close = (exp.match(/\)/g) || []).length;
+                for (let i = 0; i < (open - close); i++) exp += ')';
+                const res = +eval(exp).toFixed(6);
+                addHistory(screen.value, res);
+                screen.value = res;
+                speak(`Result is ${res}`);
+            } catch { screen.value = 'Error'; }
+        }
+
+        // FORMULAS
+        function runFormula(type) {
+            if (type === 'pythagoras') {
+                const a = prompt("Side A:"), b = prompt("Side B:");
+                screen.value = Math.sqrt(a * a + b * b).toFixed(4);
+            } else if (type === 'circle') {
+                const r = prompt("Radius:");
+                screen.value = (Math.PI * r * r).toFixed(4);
+            }
+            solve();
+        }
+
+        // VOICE
+        function startVoice() {
+            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!Speech) return alert("Not supported");
+            const rec = new Speech();
+            rec.onstart = () => document.getElementById('mic').classList.add('active');
+            rec.onend = () => document.getElementById('mic').classList.remove('active');
+            rec.onresult = (e) => {
+                let t = e.results[0][0].transcript.toLowerCase()
+                    .replace(/times/g, '*').replace(/plus/g, '+').replace(/minus/g, '-').replace(/divided/g, '/');
+                screen.value = t;
+                setTimeout(solve, 1000);
+            };
+            rec.start();
+        }
+        function speak(t) { window.speechSynthesis.speak(new SpeechSynthesisUtterance(t)); }
+
+        // API & CONVERSIONS
+        async function convertFX() {
+            const amt = document.getElementById('unitVal').value;
+            const f = document.getElementById('unitFrom').value;
+            const t = document.getElementById('unitTo').value;
+            if (!amt) return;
+            const res = await fetch(`https://frankfurter.dev{amt}&from=${f}&to=${t}`);
+            const data = await res.json();
+            document.getElementById('unitRes').innerText = `${data.rates[t]} ${t}`;
+        }
+
+        // CHARTS & GRAPHS
+        function drawChart(type) {
+            const ctx = document.getElementById('dataChart').getContext('2d');
+            const labels = document.getElementById('chartLabels').value.split(',');
+            const values = document.getElementById('chartData').value.split(',').map(Number);
+            if (activeChart) activeChart.destroy();
+            activeChart = new Chart(ctx, {
+                type: type,
+                data: { labels: labels, datasets: [{ data: values, backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'] }] },
+                options: { plugins: { legend: { labels: { color: getComputedStyle(document.body).getPropertyValue('--text') } } } }
+            });
+        }
+
+        function plotGraph() {
+            const canvas = document.getElementById('graphCanvas');
+            const ctx = canvas.getContext('2d');
+            const func = document.getElementById('graphFunc').value;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#6366f1';
+            ctx.beginPath();
+            for (let x = 0; x < canvas.width; x++) {
+                const mx = (x - canvas.width / 2) / 20;
+                const my = eval(func.replace(/x/g, `(${mx})`));
+                const y = canvas.height / 2 - (my * 20);
+                x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        function addHistory(e, r) {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            div.innerHTML = `<small>${e}=</small> <b>${r}</b>`;
+            div.onclick = () => screen.value = r;
+            document.getElementById('historyLog').prepend(div);
+        }
+    </script>
+</body>
+
+</html>

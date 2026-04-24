@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Login | Neon UI</title>
+    <style>
+        /* Base Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Consolas', monospace; }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #050801; /* Ultra Dark Background */
+        }
+
+        /* The Neon Glass Box */
+        .login-box {
+            position: relative;
+            width: 400px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animated Glowing Border */
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(0deg, transparent, #03e9f4, #03e9f4);
+            transform-origin: bottom right;
+            animation: animate 6s linear infinite;
+        }
+
+        @keyframes animate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h2 { color: #03e9f4; text-align: center; margin-bottom: 30px; letter-spacing: 4px; }
+
+        /* Input Styling */
+        .user-box { position: relative; }
+        .user-box input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 30px;
+            border: none;
+            border-bottom: 1px solid #fff;
+            outline: none;
+            background: transparent;
+        }
+
+        /* Glow Button */
+        button {
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            color: #03e9f4;
+            font-size: 16px;
+            text-transform: uppercase;
+            overflow: hidden;
+            transition: 0.5s;
+            letter-spacing: 4px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #03e9f4;
+            color: #050801;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 100px #03e9f4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h2>AUTHENTICATE</h2>
+        <form id="neoForm">
+            <div class="user-box">
+                <input type="text" name="" required placeholder="Username">
+            </div>
+            <div class="user-box">
+                <input type="password" name="" required placeholder="Access Key">
+            </div>
+            <button type="button" onclick="alert('Access Initialized')">Execute</button>
+        </form>
+    </div>
+
+</body>
+</html>

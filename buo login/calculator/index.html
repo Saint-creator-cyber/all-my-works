@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="{{ url_for( filename='app.py') }}">
+
+</head>
+<style>
+    :root {
+        --bg: #f8f9fa;
+        --card: #ffffff;
+        --text: #333;
+        --accent: #ff9500;
+        --btn: #eee;
+    }
+
+    body.dark-mode {
+        --bg: #121212;
+        --card: #1e1e1e;
+        --text: #f0f0f0;
+        --btn: #333;
+    }
+
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        transition: 0.3s;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header-nav {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        align-items: center;
+    }
+
+    .tabs button {
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        background: var(--btn);
+        color: var(--text);
+        border-radius: 5px;
+    }
+
+    .tabs button.active {
+        background: var(--accent);
+        color: white;
+    }
+
+    .main-container {
+        display: flex;
+        gap: 30px;
+        padding: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .calculator,
+    .converter {
+        background: #222;
+        padding: 20px;
+        border-radius: 20px;
+        width: 300px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
+    body.dark-mode .calculator,
+    body.dark-mode .converter {
+        background: #000;
+    }
+
+    .display-wrap {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    #display {
+        width: 100%;
+        height: 60px;
+        font-size: 1.8rem;
+        text-align: right;
+        padding: 10px 45px 10px 10px;
+        box-sizing: border-box;
+        border-radius: 10px;
+        border: none;
+    }
+
+    #copy-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    button {
+        padding: 15px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .sci {
+        background: #3d3d3d;
+        color: #3498db;
+        font-size: 0.85rem;
+    }
+
+    .op {
+        background: #3d3d3d;
+        color: var(--accent);
+    }
+
+    .equal {
+        grid-column: span 4;
+        background: var(--accent);
+        color: white;
+        font-weight: bold;
+    }
+
+    .clear {
+        background: #ff4444;
+        color: white;
+    }
+
+    .history-card {
+        background: var(--card);
+        padding: 20px;
+        border-radius: 20px;
+        width: 260px;
+        height: 440px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .hist-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #history-list {
+        list-style: none;
+        padding: 0;
+        overflow-y: auto;
+        max-height: 380px;
+    }
+
+    .history-item {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .history-item:hover {
+        color: var(--accent);
+    }
+
+    .converter select,
+    .converter input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: none;
+    }
+
+    .conv-res-box {
+        text-align: center;
+        font-size: 2rem;
+        color: var(--accent);
+        padding-top: 10px;
+    }
+</style>
+
+<body>
+    <div class="header-nav">
+        <div class="tabs">
+            <button onclick="showTab('calc')" id="btn-calc" class="active">Calculator</button>
+            <button onclick="showTab('conv')" id="btn-conv">Converter</button>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    </div>
+
+    <div class="main-container">
+        <!-- CALCULATOR -->
+        <div id="calc-tab" class="tab-content">
+            <div class="calculator">
+                <div class="display-wrap">
+                    <input type="text" id="display" disabled placeholder="0">
+                    <button id="copy-btn" onclick="copyToClipboard()">📋</button>
+                </div>
+                <div class="buttons">
+                    <button class="sci" onclick="append('sin(')">sin</button>
+                    <button class="sci" onclick="append('cos(')">cos</button>
+                    <button class="sci" onclick="append('tan(')">tan</button>
+                    <button class="sci" onclick="append('log(')">log</button>
+                    <button class="sci" onclick="append('π')">π</button>
+                    <button class="sci" onclick="append('^')">xʸ</button>
+                    <button class="sci" onclick="append('√(')">√</button>
+                    <button class="sci" onclick="append('%')">%</button>
+                    <button onclick="append('7')">7</button>
+                    <button onclick="append('8')">8</button>
+                    <button onclick="append('9')">9</button>
+                    <button class="op" onclick="append('/')">/</button>
+                    <button onclick="append('4')">4</button>
+                    <button onclick="append('5')">5</button>
+                    <button onclick="append('6')">6</button>
+                    <button class="op" onclick="append('*')">*</button>
+                    <button onclick="append('1')">1</button>
+                    <button onclick="append('2')">2</button>
+                    <button onclick="append('3')">3</button>
+                    <button class="op" onclick="append('-')">-</button>
+                    <button onclick="append('0')">0</button>
+                    <button onclick="append('.')">.</button>
+                    <button class="clear" onclick="clearDisplay()">C</button>
+                    <button class="op" onclick="append('+')">+</button>
+                    <button class="equal" onclick="sendToPython()">=</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONVERTER -->
+        <div id="conv-tab" class="tab-content" style="display:none;">
+            <div class="converter">
+                <h3>Unit Converter</h3>
+                <select id="unit-cat" onchange="updateUnits()">
+                    <option value="length">Length</option>
+                    <option value="weight">Weight</option>
+                    <option value="temp">Temperature</option>
+                </select>
+                <input type="number" id="unit-val" placeholder="Value" oninput="runConvert()">
+                <div class="unit-row">
+                    <select id="unit-from" onchange="runConvert()"></select>
+                    <span>to</span>
+                    <select id="unit-to" onchange="runConvert()"></select>
+                </div>
+                <div class="conv-res-box">
+                    <span id="conv-res">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHARED HISTORY -->
+        <div class="history-card">
+            <div class="hist-head">
+                <h3>History</h3>
+                <button onclick="clearHistoryFromServer()">Clear</button>
+            </div>
+            <ul id="history-list"></ul>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+<script>
+    let expr = "";
+    const units = { length: ['m', 'cm', 'mm', 'km', 'in', 'ft'], weight: ['g', 'kg', 'lb', 'oz'], temp: ['C', 'F'] };
+
+    function showTab(t) {
+        document.getElementById('calc-tab').style.display = t === 'calc' ? 'block' : 'none';
+        document.getElementById('conv-tab').style.display = t === 'conv' ? 'block' : 'none';
+        document.getElementById('btn-calc').className = t === 'calc' ? 'active' : '';
+        document.getElementById('btn-conv').className = t === 'conv' ? 'active' : '';
+    }
+
+    function append(v) { expr += v; document.getElementById('display').value = expr; }
+    function clearDisplay() { expr = ""; document.getElementById('display').value = ""; }
+
+    async function sendToPython() {
+        const res = await fetch('/calculate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ expression: expr }) });
+        const data = await res.json();
+        expr = data.result.toString();
+        document.getElementById('display').value = expr;
+        updateHist(data.history);
+    }
+
+    function updateUnits() {
+        const cat = document.getElementById('unit-cat').value;
+        const f = document.getElementById('unit-from'), t = document.getElementById('unit-to');
+        f.innerHTML = t.innerHTML = "";
+        units[cat].forEach(u => { f.innerHTML += `<option value="${u}">${u}</option>`; t.innerHTML += `<option value="${u}">${u}</option>`; });
+    }
+
+    async function runConvert() {
+        const v = document.getElementById('unit-val').value;
+        if (!v) return;
+        const res = await fetch('/convert', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ value: v, category: document.getElementById('unit-cat').value, from: document.getElementById('unit-from').value, to: document.getElementById('unit-to').value })
+        });
+        const data = await res.json();
+        document.getElementById('conv-res').innerText = data.result;
+    }
+
+    function updateHist(h) {
+        const list = document.getElementById('history-list');
+        list.innerHTML = "";
+        h.forEach(i => {
+            const li = document.createElement('li'); li.className = "history-item"; li.textContent = i.full;
+            li.onclick = () => { expr = i.val; document.getElementById('display').value = expr; };
+            list.appendChild(li);
+        });
+    }
+
+    async function clearHistoryFromServer() {
+        const res = await fetch('/clear', { method: 'POST' });
+        const data = await res.json();
+        updateHist(data.history);
+    }
+
+    function copyToClipboard() {
+        const val = document.getElementById('display').value;
+        if (!val) return;
+        navigator.clipboard.writeText(val);
+        const b = document.getElementById('copy-btn'); b.innerText = "✅"; setTimeout(() => b.innerText = "📋", 1500);
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    document.addEventListener('keydown', e => {
+        if (/[0-9+\-*/.()%^]/.test(e.key)) append(e.key);
+        if (e.key === 'Enter') { e.preventDefault(); sendToPython(); }
+        if (e.key === 'Backspace') { expr = expr.slice(0, -1); document.getElementById('display').value = expr; }
+    });
+
+    window.onload = async () => {
+        updateUnits();
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+        const res = await fetch('/calculate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ expression: '' }) });
+        const data = await res.json();
+        updateHist(data.history);
+    };
+
+</script>
+
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAINT | Elite Access Signup</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        /* --- BRANDING & GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: #050505;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* SPLIT SCREEN LAYOUT */
+        .split-screen {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+
+        .left,
+        .right {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .left {
+            background-image: url('https://unsplash.com');
+        }
+
+        .right {
+            background-image: url('https://unsplash.com');
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* THE SIGNUP CARD */
+        .signup-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 480px;
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(25px);
+            padding: 50px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            text-align: center;
+            z-index: 100;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+            transition: opacity 0.5s ease;
+        }
+
+        .logo {
+            width: 85px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            border: 1.5px solid #D4AF37;
+            padding: 2px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            color: #D4AF37;
+            font-size: 2.2rem;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        /* PROGRESS BAR */
+        .progress-track {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 33%;
+            background: linear-gradient(90deg, #D4AF37, #f3d17a);
+            transition: 0.6s ease;
+        }
+
+        .step-text {
+            font-size: 0.75rem;
+            color: #D4AF37;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        /* FORMS & STEPS */
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        input:focus {
+            border-color: #D4AF37;
+            outline: none;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* BUTTONS */
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: #D4AF37;
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-login:hover {
+            background: #f3d17a;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-back {
+            flex: 0.4;
+            background: transparent;
+            border: 1px solid #555;
+            color: #ccc;
+        }
+
+        /* SUCCESS MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-card {
+            background: #111;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid #D4AF37;
+            max-width: 400px;
+            animation: popIn 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-icon {
+            font-size: 50px;
+            color: #D4AF37;
+            border: 2px solid #D4AF37;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        .gold-text {
+            color: #D4AF37;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+            transition: 0s;
+        }
+
+        .shimmer:hover::after {
+            left: 130%;
+            transition: 0.7s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SUCCESS MODAL -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="success-icon">✓</div>
+            <h2>Elite Access Granted</h2>
+            <p style="margin-bottom: 25px; color: #aaa;">Your credentials have been verified. Welcome to the SAINT inner
+                circle.</p>
+            <button class="btn-login shimmer" onclick="window.location.href='buologinpage.html'">GO TO LOGIN</button>
+        </div>
+    </div>
+
+    <div class="split-screen">
+        <div class="left">
+            <div class="overlay"></div>
+        </div>
+        <div class="right">
+            <div class="overlay"></div>
+        </div>
+
+        <div class="signup-card" id="signupCard">
+            <div class="progress-track">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div class="step-text" id="stepText">Step 1: Identity</div>
+
+            <img src="https://i.pinimg.com/1200x/31/8a/8c/318a8c35dce69054524cedc48f8d4db3.jpg" alt="SAINT Logo"
+                class="logo">
+            <h2>SAINT</h2>
+            <p class="subtitle">Properties & Auto Elite Access</p>
+
+            <form id="multiStepForm">
+                <!-- STEP 1 -->
+                <div class="form-step active" id="step1">
+                    <div class="input-row">
+                        <input type="text" name="first_name" placeholder="First Name" required>
+                        <input type="text" name="last_name" placeholder="Last Name" required>
+                    </div>
+                    <input type="email" name="email" id="signupEmail" placeholder="Email Address" required>
+                    <button type="button" class="btn-login shimmer" onclick="nextStep(2)">PROCEED TO SECURITY</button>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="form-step" id="step2">
+                    <input type="password" name="password" id="signupPassword" placeholder="Create Password" required
+                        minlength="8">
+                    <div style="text-align: left; font-size: 0.8rem; margin-bottom: 15px;">
+                        <label><input type="checkbox" required> I agree to the <span class="gold-text">Premium
+                                Terms</span></label>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-login btn-back" onclick="nextStep(1)">BACK</button>
+                        <button type="button" class="btn-login shimmer" onclick="nextStep(3)">FINISH
+                            REGISTRATION</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="form-step" id="step3">
+                    <p style="margin-bottom: 20px; color: #888; font-size: 0.9rem;">Enter the security signature code.
+                    </p>
+                    <input type="text" id="verificationInput" maxlength="6" placeholder="0 0 0 0 0 0"
+                        style="text-align: center; letter-spacing: 10px; font-size: 1.5rem;">
+
+                    <div id="resendContainer" style="margin-bottom: 20px; font-size: 0.8rem; color: #555;">
+                        Resend in <span id="timer" class="gold-text">30</span>s
+                    </div>
+
+                    <button type="submit" class="btn-login shimmer">VERIFY & ENTER</button>
+                </div>
+            </form>
+
+            <div class="form-footer">Already have an account? <a href="buologin.html" class="gold-text">Login</a></div>
+        </div>
+    </div>
+
+    <script>
+        const progressBar = document.getElementById('progressBar');
+        const stepText = document.getElementById('stepText');
+        let countdown;
+
+        function nextStep(step) {
+            if (step === 2) {
+                const inputs = document.getElementById('step1').querySelectorAll('input');
+                let v = true; inputs.forEach(i => { if (!i.checkValidity()) { i.reportValidity(); v = false; } });
+                if (!v) return;
+            }
+
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+
+            if (step === 1) { progressBar.style.width = '33%'; stepText.innerText = 'Step 1: Identity'; }
+            if (step === 2) { progressBar.style.width = '66%'; stepText.innerText = 'Step 2: Security'; }
+            if (step === 3) {
+                progressBar.style.width = '100%';
+                stepText.innerText = 'Step 3: Verification';
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            let s = 30;
+            const tDisplay = document.getElementById('timer');
+            const rContainer = document.getElementById('resendContainer');
+            clearInterval(countdown);
+            countdown = setInterval(() => {
+                s--; tDisplay.innerText = s;
+                if (s <= 0) {
+                    clearInterval(countdown);
+                    rContainer.innerHTML = '<span class="gold-text" style="cursor:pointer;" onclick="startTimer()">RESEND SIGNATURE</span>';
+                }
+            }, 1000);
+        }
+
+        document.getElementById('multiStepForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const code = document.getElementById('verificationInput').value;
+
+            if (code === "000000") {
+                // SAVE TO MEMORY
+                const email = document.getElementById('signupEmail').value;
+                const pass = document.getElementById('signupPassword').value;
+                localStorage.setItem('saint_user_email', email);
+                localStorage.setItem('saint_user_password', pass);
+
+                // SHOW SUCCESS
+                document.getElementById('signupCard').style.opacity = '0.2';
+                document.getElementById('successModal').style.display = 'flex';
+
+                // FORCE REDIRECT AFTER 3 SECONDS
+                setTimeout(() => {
+                    window.location.href = "buologinpage.html";
+                }, 3000);
+            } else {
+                alert("Invalid Code. Please use: 000000");
+            }
+        });
+    </script>
+</body>
+
+</html>

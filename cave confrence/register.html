@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAVE 2026 | Portal</title>
+    <style>
+        :root { --glass: rgba(255, 255, 255, 0.1); --accent: #d4a572; }
+        body { 
+            margin: 0; font-family: 'Garamond', serif; height: 100vh; display: flex; 
+            justify-content: center; align-items: center; color: white;
+            background: linear-gradient(-45deg, #0f0f0f, #23395d, #4b1212, #1a1a1a,#4b1212,#0f3c09,#a41479);
+            background-size: 400% 400%; animation: gradientBG 5s ease infinite;
+        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        .glass-box { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 40px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        input { width: 100%; padding: 14px; margin: 10px 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; box-sizing: border-box; }
+        .btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .tab-content { display: none; } .active { display: block; }
+        .link { font-size: 13px; color: var(--accent); cursor: pointer; text-decoration: underline; display: block; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="glass-box">
+        <h2 style="letter-spacing: 4px; font-weight: 300;">CAVE CONFRENCE2026</h2>
+        
+        <div id="loginPage" class="tab-content active">
+            <input type="email" id="loginEmail" placeholder="Gmail Address">
+            <input type="password" id="loginPass" placeholder="Password">
+            <button class="btn" onclick="handleLogin()">LOGIN</button>
+            <span class="link" onclick="showTab('registerPage')">New Delegate? Register</span>
+            <span class="link" onclick="showTab('forgotPage')">Forgot Password?</span>
+        </div>
+        
+
+        <div id="registerPage" class="tab-content">
+            <input type="text" id="regName" placeholder="Full Name">
+            <input type="email" id="regEmail" placeholder="Gmail Address">
+            <input type="password" id="regPass" placeholder="Secure Password">
+            <button class="btn" onclick="handleRegister()">CREATE ACCOUNT</button>
+            <span class="link" onclick="showTab('loginPage')">Back to Login</span>
+        </div>
+
+        <div id="forgotPage" class="tab-content">
+            <input type="text" id="recoverName" placeholder="Registered Full Name">
+            <button class="btn" onclick="handleRecovery()">RECOVER</button>
+            <div id="recoveryResult" style="margin-top: 10px; color: var(--accent);"></div>
+            <span class="link" onclick="showTab('loginPage')">Back</span>
+        </div>
+    </div>
+
+    <script>
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function handleRegister() {
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const pass = document.getElementById('regPass').value;
+            const name = document.getElementById('regName').value;
+            const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+
+            if (!email.endsWith('@gmail.com')) return alert("Access Denied: Only @gmail.com allowed.");
+            if (localStorage.getItem(email)) return alert("Account already exists.");
+            if (!strongRegex.test(pass)) return alert("Password Weak: Needs Upper, Lower, Number, and Symbol.");
+
+            localStorage.setItem(email, JSON.stringify({fullName: name, password: pass}));
+            alert("Registration Success.");
+            showTab('loginPage');
+        }
+
+      function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPass').value;
+    
+    // Retrieve the user from browser memory
+    const stored = JSON.parse(localStorage.getItem(email));
+    
+    if (stored && stored.password === pass) {
+        // Redirection logic to your specific HTML file
+        window.location.href = "cave.html"; 
+    } else {
+        alert("Invalid Credentials. Please check your Gmail and Password.");
+    }
+}
+
+
+        function handleRecovery() {
+            const name = document.getElementById('recoverName').value.trim().toLowerCase();
+            for (let i = 0; i < localStorage.length; i++) {
+                const data = JSON.parse(localStorage.getItem(localStorage.key(i)));
+                if (data.fullName.toLowerCase() === name) {
+                    document.getElementById('recoveryResult').innerText = "Found! Password: " + data.password;
+                    return;
+                }
+            }
+            alert("No account found with that name.");
+        }
+    </script>
+</body>
+</html>

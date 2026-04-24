@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cave Conference | Divine Transformation</title>
+    <!-- Modern Font -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+       body {
+             background: linear-gradient(-45deg, #0f0f0f, #23395d, #4b1212, #1a1a1a,#4b1212,#0f3c09,#a41479);
+            background-size: 400% 400%; animation: gradientBG 5s ease infinite;
+            
+            font-family: Arial, sans-serif;
+            
+            margin: 0;
+            color: white;
+            display: block;
+            flex-direction: column;
+            align-items: center;
+            cursor: default;
+        }
+         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        :root {
+            --primary: #0a0a0a; /* Deep Cave Black */
+            --accent: #f39c12; /* Fire Amber */
+            --text-light: #f5f5f5;
+            --glass: rgba(244, 239, 239, 0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { font-family: 'Inter', sans-serif; background-color: var(--primary); color: var(--text-light); overflow-x: hidden; }
+
+        /* Navigation */
+        nav { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; z-index: 1000; background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(10px); }
+        .logo { font-weight: 900; letter-spacing: 2px; color: var(--accent); }
+        .nav-links a { color: white; text-decoration: none; margin-left: 30px; font-size: 0.9rem; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* Hero Section */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #f39c12;}
+        .hero h1 { font-size: clamp(3rem, 10vw, 6rem); text-transform: uppercase; margin-bottom: 10px; line-height: 1; }
+        .hero p { font-size: 1.2rem; color: #f1eeee; margin-bottom: 30px; max-width: 600px; }
+        .btn { padding: 15px 40px; background: var(--accent); color: #000; text-decoration: none; font-weight: 700; border-radius: 50px; transition: 0.4s; }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(243, 156, 18, 0.4); }
+
+        /* Content Sections */
+        section { padding: 100px 10%; }
+        .section-title { font-size: 2.5rem; margin-bottom: 50px; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
+        /* Cards & Schedule */
+        .card { background: var(--glass); padding: 40px; border-radius: 20px; border: 1px dotted rgba(255,255,255,0.1); }
+        .card h3 { color: var(--accent); margin-bottom: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .time { font-weight: 700; color: var(--accent); width: 120px; }
+
+        footer { text-align: center; padding: 50px; border-top: 1px solid rgba(255,255,255,0.1); color: #666; }
+
+        .section {
+    text-align: center;
+    color:#e6680e;
+    text-decoration: dotted;
+}
+    </style>
+</head>
+<body>
+  
+    <nav>
+        <div class="logo">CAVE CONFERENCE 2026</div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#schedule">Schedule</a>
+            <a href="#speakers">Speakers</a>
+            
+        </div>
+    </nav>
+
+    <header class="hero">
+        <p>REVIVAL IS HERE</p>
+        <h1> <strong>CAVE  CONFRENCE 2026</strong> </h1>
+        <p>Experience an atmosphere of deep worship, prophetic encounters, and total transformation.</p>
+        
+    </header>
+
+    <section id="schedule">
+        <h2 class="section-title">Encounter Timeline</h2>
+        <div class="card">
+            <table>
+                <tr><td class="time">08:00 AM</td><td>Morning Dew Service (Teaching & Word)</td></tr>
+                <tr><td class="time">12:00 PM</td><td>Prophetic Intercession & Prayer Rain</td></tr>
+                <td class="time" >1:00pm </td> <td>Believers' & Healing Meetings</td></tr>
+                <tr><td class="time">05:30 PM</td><td>Evening Fire Session (Worship & Anointing)</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="grid">
+            <div class="card">
+                <h3>Our Vision</h3>
+                <p>Moving every believer from a place of spiritual limitation into their prophetic destiny through the "Cave experience."</p>
+            </div>
+            <div class="card">
+                <h3>The Atmosphere</h3>
+                <p>Pure, unadulterated worship coupled with the sharp demonstration of the Apostolic spirit.</p>
+            </div>
+        </div>
+    </section>
+    <div class="section ">
+    <h2>Contact Us</h2>
+    <p> <strong>Email: ao2240800@gmail.com </strong></p>
+    <p><strong>Phone: +234 803 456 7890</strong></p>
+</div>
+
+    <footer>
+        <p>&copy; 2026 Cave Conference Ministries. All rights reserved.</p>
+    </footer>
+</body>
+</html>

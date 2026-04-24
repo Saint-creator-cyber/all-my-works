@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<style>
+    *{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+}
+
+body { background: linear-gradient(-45deg, #0f0f0f, #23395d, #4b1212, #1a1a1a,#4b1212,#0f3c09,#a41479);
+            background-size: 400% 400%; animation: gradientBG 5s ease infinite;
+  background-size: cover;
+  color: white;
+}
+ @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+ 
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 10px;
+}
+.login {
+  width: 30%;
+  display: flex;
+  padding: 30px 40px;
+  flex-direction: column;
+  gap: 30px;
+
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.input > input,
+button {
+  width: 100%;
+  height: 40px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+}
+button {
+  background-color: #bd0c47;
+  height: 40px;
+  padding: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+.input > p {
+  font-weight: 300;
+}
+
+.login > p {
+  text-align: center;
+}
+
+.icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icons > .img {
+  width: 30%;
+  padding: 5px 10px;
+  background: white;
+  justify-content: center;
+  display: inherit;
+  border-radius: 10px;
+  cursor: pointer;
+}
+</style>
+
+<div class="container">
+  <div class="login">
+    <h2>Login</h2>
+    <div class="input">
+      <p>Name</p>
+      <input type="text" placeholder="name...." />
+    </div>
+    <div class="input">
+      <p>Password</p>
+      <input type="password" placeholder="enter your password..." />
+    </div>
+    <button>Sign in</button>
+    <p>or contiune with</p>
+
+    <div class="icons">
+      <div class="img">
+        <img src="images/flat-color-icons_google.png" alt="google" />
+      </div>
+      <div class="img">
+        <img src="images/Group.png" alt="github" />
+      </div>
+      <div class="img">
+        <img src="images/Group (1).png" alt="Facebook" />
+      </div>
+    </div>
+    <p>Dont have an account yet? <span>Register Here</span></p>
+  </div>
+</div>

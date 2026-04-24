@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAINT Properties & Auto | Exclusive Portfolio</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --primary-navy: #001f3f;
+            --accent-gold: #d4af37;
+            --white: #ffffff;
+            --light-grey: #f4f4f4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--light-grey);
+            overflow-x: hidden;
+        }
+
+        /* LOCK MECHANISM: Blur the entire site if not logged in */
+        .locked-content {
+            filter: blur(15px);
+            pointer-events: none;
+            transition: 0.6s ease;
+        }
+
+        .unlocked {
+            filter: blur(0);
+            pointer-events: auto;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            background: var(--primary-navy);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--accent-gold);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .auth-trigger {
+            background: var(--accent-gold);
+            color: var(--primary-navy) !important;
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* SIDEBAR LOGIN */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 350px;
+            height: 100%;
+            background: var(--white);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            transition: 0.4s ease;
+            padding: 40px 30px;
+        }
+
+        .side-panel.active {
+            right: 0;
+        }
+
+        .side-panel h2 {
+            color: var(--primary-navy);
+            margin-bottom: 20px;
+        }
+
+        .side-panel input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .side-panel .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-navy);
+            color: var(--accent-gold);
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .close-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Content Styles */
+        .hero {
+            height: 40vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://unsplash.com');
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .brand-story {
+            padding: 60px 10%;
+            text-align: center;
+            background: white;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .brand-story h2 {
+            margin-bottom: 20px;
+        }
+
+        .listings {
+            padding: 50px 8%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-info {
+            padding: 20px;
+        }
+
+        .price {
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN SIDEBAR -->
+    <div id="sidePanel" class="side-panel">
+        <span class="close-panel" onclick="toggleSidebar()">×</span>
+        <h2>Access Portfolio</h2>
+        <form id="loginForm">
+            <input type="text" placeholder="Member Username" required>
+            <input type="password" placeholder="Member Password" required>
+            <button type="submit" class="login-btn">ENTER PORTFOLIO</button>
+        </form>
+    </div>
+    <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">SAINT <span>Properties & Auto</span></div>
+        <ul class="nav-links">
+            <li id="guest-nav"><a class="auth-trigger" href="buologinpage.html" onclick="toggleSidebar()">Login to
+                    View</a>
+            </li>
+            <li id="user-acc" class="hidden"><a href="#">My Account</a></li>
+            <li id="user-logout" class="hidden"><a onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAIN CONTENT (Blurred by default) -->
+    <div id="mainContent" class="locked-content">
+        <section class="hero">
+            <h1>EXCELLENCE CURATED</h1>
+        </section>
+
+        <section class="brand-story">
+            <h2>Our Philosophy</h2>
+            <p>SAINT represents the intersection of high-performance automotive engineering and architectural mastery.
+            </p>
+            <p>Every vehicle and residence passes our 150-point "Saint Standard" inspection to ensure absolute
+                perfection.</p>
+            <p>Join the inner circle for a seamless acquisition process.</p>
+        </section>
+
+        <section class="listings">
+            <div class="grid">
+                <div class="card"><img src="https://unsplash.com">
+                    <div class="card-info">
+                        <h3>Maitama Villa</h3>
+                        <p class="price">₦450M</p>
+                    </div>
+                </div>
+                <div class="card"><img src="https://unsplash.com">
+                    <div class="card-info">
+                        <h3>Lamborghini Urus</h3>
+                        <p class="price">₦280M</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 1. Sidebar Toggle
+        function toggleSidebar() {
+            document.getElementById('sidePanel').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        // 2. Main Logic to check Session Status
+        function updateUI() {
+            const loggedIn = sessionStorage.getItem('isLoggedIn');
+            const main = document.getElementById('mainContent');
+            const guest = document.getElementById('guest-nav');
+            const account = document.getElementById('user-acc');
+            const logoutBtn = document.getElementById('user-logout');
+
+            if (loggedIn === 'true') {
+                main.classList.add('unlocked'); // Remove blur
+                guest.classList.add('hidden'); // Hide Login button
+                account.classList.remove('hidden'); // Show My Account
+                logoutBtn.classList.remove('hidden'); // Show Logout
+            } else {
+                main.classList.remove('unlocked'); // Apply blur
+                guest.classList.remove('hidden'); // Show Login button
+                account.classList.add('hidden'); // Hide My Account
+                logoutBtn.classList.add('hidden'); // Hide Logout
+            }
+        }
+
+        // 3. Login Event
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            sessionStorage.setItem('isLoggedIn', 'true'); // Save session
+            toggleSidebar();
+            updateUI();
+        });
+
+        // 4. Logout Event
+        function logout() {
+            sessionStorage.removeItem('isLoggedIn'); // Clear session
+            updateUI();
+        }
+
+        // Run immediately when page loads
+        window.onload = updateUI;
+    </script>
+</body>
+
+</html>

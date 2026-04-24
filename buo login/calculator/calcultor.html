@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formal AI Math Suite</title>
+    <!-- Formal Libraries -->
+    <script src="https://cloudflare.com"></script>
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --text: #f8fafc;
+            --accent: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .card {
+            background: var(--panel);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Scanner UI */
+        #viewport {
+            width: 100%;
+            height: 250px;
+            background: #000;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            animation: scan 2s infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+
+        /* Interface */
+        input.math-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.4rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-main {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-scan {
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* Steps System */
+        .steps {
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+            border-left: 4px solid var(--primary);
+        }
+
+        .step-item {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #cbd5e1;
+        }
+
+        .step-item strong {
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Camera Card -->
+        <div class="card">
+            <h3 style="margin-top:0">Scan Equation</h3>
+            <div id="viewport">
+                <video id="video" autoplay playsinline></video>
+                <div class="scanner-line"></div>
+            </div>
+            <div class="btn-group" style="margin-top:15px">
+                <button class="btn-scan" id="cam-toggle" onclick="toggleScanner()">Open Camera</button>
+                <button class="btn-main" id="snap-btn" onclick="capture()" style="display:none">Capture & Read</button>
+            </div>
+            <p id="status" style="font-size:0.8rem; text-align:center; color:#94a3b8; margin-top:10px">Ready</p>
+        </div>
+
+        <!-- Solver Card -->
+        <div class="card">
+            <input type="text" id="math-input" class="math-input" placeholder="e.g. 2x + 5 = 13">
+            <div class="btn-group">
+                <button class="btn-main" onclick="solveFormal()">Solve Equation</button>
+                <button style="background:#475569; color:white" onclick="simplifyFormal()">Simplify</button>
+            </div>
+
+            <div id="solution-box" class="steps">
+                <div id="steps-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('math-input');
+        const status = document.getElementById('status');
+        let stream = null;
+
+        // --- FORMAL SOLVER LOGIC ---
+        function solveFormal() {
+            const val = input.value.trim();
+            const list = document.getElementById('steps-list');
+            document.getElementById('solution-box').style.display = 'block';
+            list.innerHTML = '';
+
+            if (val.includes('=')) {
+                try {
+                    const sides = val.split('=');
+                    // Formal Step 1: Normalize Equation
+                    addStep("Step 1: Move all terms to one side", `Set equation to 0: (${sides[0]}) - (${sides[1]}) = 0`);
+
+                    // Formal Step 2: Symbolic Simplification
+                    const combined = `(${sides[0]}) - (${sides[1]})`;
+                    const simplified = math.simplify(combined).toString();
+                    addStep("Step 2: Combine Like Terms", `The simplified form is: ${simplified} = 0`);
+
+                    // Formal Step 3: Extract Solution
+                    // For linear equations ax + b = 0 -> x = -b/a
+                    const node = math.parse(simplified);
+                    const result = solveLinear(simplified);
+                    addStep("Step 3: Solve for Variable", `<strong>Final Answer: x = ${result}</strong>`);
+                } catch (e) {
+                    list.innerHTML = "Error: High-order algebra requires a specialized server. Try linear equations.";
+                }
+            } else {
+                const res = math.evaluate(val);
+                addStep("Calculation Result", `<strong>${res}</strong>`);
+            }
+        }
+
+        function solveLinear(expr) {
+            // Simplified solver for ax + b = 0 logic
+            const f = math.parse(expr);
+            const x0 = math.evaluate(expr.replace(/x/g, '(0)'));
+            const x1 = math.evaluate(expr.replace(/x/g, '(1)'));
+            const slope = x1 - x0;
+            return (-x0 / slope).toFixed(2);
+        }
+
+        function addStep(title, content) {
+            const div = document.createElement('div');
+            div.className = 'step-item';
+            div.innerHTML = `<div><strong>${title}</strong></div><div>${content}</div>`;
+            document.getElementById('steps-list').appendChild(div);
+        }
+
+        // --- OCR & CAMERA LOGIC ---
+        async function toggleScanner() {
+            const vp = document.getElementById('viewport');
+            const btn = document.getElementById('cam-toggle');
+            const snap = document.getElementById('snap-btn');
+
+            if (!stream) {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                document.getElementById('video').srcObject = stream;
+                vp.style.display = 'block';
+                btn.innerText = "Close Camera";
+                snap.style.display = 'block';
+            } else {
+                stream.getTracks().forEach(t => t.stop());
+                stream = null;
+                vp.style.display = 'none';
+                btn.innerText = "Open Camera";
+                snap.style.display = 'none';
+            }
+        }
+
+        async function capture() {
+            status.innerText = "Analyzing with AI...";
+            const canvas = document.createElement('canvas');
+            const video = document.getElementById('video');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+
+            const { data: { text } } = await Tesseract.recognize(canvas, 'eng');
+            const cleaned = text.replace(/[^0-9xX+=*/-]/g, '');
+            input.value = cleaned;
+            status.innerText = "Recognized: " + cleaned;
+            toggleScanner();
+        }
+    </script>
+</body>
+
+</html>

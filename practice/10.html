@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUO Properties | Luxury Listing in Lekki</title>
+    <script src="https://tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cloudflare.com">
+
+    <style>
+        /* Custom BUO Color Palette */
+        :root {
+            --buo-orange: #ff4d00;
+            --buo-dark: #1a1a1a;
+            --whatsapp-green: #25d366;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Jumia Style Image Zoom Effect */
+        .main-img-container {
+            overflow: hidden;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .main-img-container img:hover {
+            transform: scale(1.05);
+            transition: transform 0.5s ease;
+        }
+
+        /* Temu-Style Glassmorphism for Urgency Banners */
+        .urgency-card {
+            background: rgba(255, 77, 0, 0.05);
+            border: 1px dashed var(--buo-orange);
+        }
+
+        /* Interactive Thumbnails */
+        .thumb-active {
+            border: 2px solid var(--buo-orange) !important;
+        }
+
+        .thumb-nail {
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .thumb-nail:hover {
+            border-color: #ddd;
+        }
+
+        /* Custom Sticky Sidebar for Desktop */
+        @media (min-width: 1024px) {
+            .sticky-sidebar {
+                position: sticky;
+                top: 100px;
+            }
+        }
+
+        /* Button Shine Effect (Temu Style) */
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-shine::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV BAR -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="index.html" class="text-3xl font-black text-[#ff4d00]">BUO<span class="text-black">.</span></a>
+            <div class="flex space-x-4">
+                <a href="index.html"
+                    class="text-gray-600 font-bold text-sm border-2 border-gray-100 px-4 py-2 rounded-lg hover:bg-gray-50">
+                    <i class="fa-solid fa-house mr-2"></i>HOME
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- LEFT COLUMN: MEDIA & DESCRIPTION -->
+            <div class="lg:w-2/3">
+                <!-- Gallery Section -->
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="main-img-container mb-4 relative">
+                        <img src="https://unsplash.com" alt="Lekki House"
+                            class="w-full h-[300px] md:h-[500px] object-cover">
+                        <div class="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 rounded text-xs font-bold">
+                            <i class="fa-solid fa-camera mr-2"></i> 1/15 Photos
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 overflow-x-auto pb-2">
+                        <img src="https://unsplash.com"
+                            class="thumb-nail thumb-active w-24 h-20 object-cover rounded cursor-pointer">
+                        <img src="https://unsplash.com"
+                            class="thumb-nail w-24 h-20 object-cover rounded cursor-pointer">
+                        <img src="https://unsplash.com"
+                            class="thumb-nail w-24 h-20 object-cover rounded cursor-pointer">
+                        <div
+                            class="w-24 h-20 bg-gray-100 flex items-center justify-center rounded text-xs text-gray-500 font-bold border-2 border-dashed">
+                            +12 MORE
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Specs Grid -->
+                <div class="bg-white mt-6 p-6 rounded-xl shadow-sm">
+                    <h2 class="text-xl font-bold mb-6 border-b pb-4">Key Features</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="text-center p-3 bg-gray-50 rounded-lg">
+                            <i class="fa-solid fa-bed text-orange-500 mb-2"></i>
+                            <p class="text-[10px] text-gray-500 uppercase font-bold">Bedrooms</p>
+                            <p class="font-bold">5 Rooms</p>
+                        </div>
+                        <div class="text-center p-3 bg-gray-50 rounded-lg">
+                            <i class="fa-solid fa-bath text-orange-500 mb-2"></i>
+                            <p class="text-[10px] text-gray-500 uppercase font-bold">Bathrooms</p>
+                            <p class="font-bold">6 Baths</p>
+                        </div>
+                        <div class="text-center p-3 bg-gray-50 rounded-lg">
+                            <i class="fa-solid fa-car text-orange-500 mb-2"></i>
+                            <p class="text-[10px] text-gray-500 uppercase font-bold">Parking</p>
+                            <p class="font-bold">4 Slots</p>
+                        </div>
+                        <div class="text-center p-3 bg-gray-50 rounded-lg">
+                            <i class="fa-solid fa-bolt text-orange-500 mb-2"></i>
+                            <p class="text-[10px] text-gray-500 uppercase font-bold">Electricity</p>
+                            <p class="font-bold">24/7 Solar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="bg-white mt-6 p-6 rounded-xl shadow-sm">
+                    <h2 class="text-xl font-bold mb-4">Description</h2>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        Located in the heart of Lekki Phase 1, Abuja. This modern architectural masterpiece offers
+                        unrivaled luxury living. Features include a private cinema, swimming pool, and smart home
+                        automation. Minutes away from the Central Business District.
+                    </p>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: ACTION PANEL -->
+            <div class="lg:w-1/3">
+                <div class="sticky-sidebar space-y-6">
+
+                    <!-- Pricing Card -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-[#ff4d00]">
+                        <div class="flex justify-between items-start mb-4">
+                            <span
+                                class="text-[10px] bg-red-600 text-white font-black px-2 py-1 rounded italic animate-pulse">PROMOTED</span>
+                            <span class="text-gray-400"><i class="fa-regular fa-share-nodes"></i></span>
+                        </div>
+                        <h1 class="text-2xl font-black text-gray-900 mb-1">Modern Duplex - Lekki</h1>
+                        <p class="text-xs text-gray-500 mb-4"><i class="fa-solid fa-location-dot text-red-500"></i> Zone
+                            A, Lekki, Lagos</p>
+
+                        <div class="mb-6">
+                            <span class="text-3xl font-black text-[#ff4d00]">₦15,000,000</span>
+                            <span class="text-xs text-gray-400">/ per annum</span>
+                        </div>
+
+                        <!-- Temu Urgency -->
+                        <div class="urgency-card p-3 rounded-lg mb-6">
+                            <p class="text-[10px] font-bold text-orange-600 uppercase mb-1">Flash Traffic!</p>
+                            <p class="text-xs text-gray-700">12 people are currently viewing this property in
+                                <strong>Abuja</strong>.
+                            </p>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="space-y-3">
+                            <a href="https://wa.me"
+                                class="btn-shine w-full bg-[#25d366] text-white py-4 rounded-xl flex items-center justify-center font-black text-sm shadow-md transition transform hover:scale-[1.02]">
+                                <i class="fa-brands fa-whatsapp text-xl mr-3"></i> CHAT WITH AGENT
+                            </a>
+                            <a href="tel:+2348000000000"
+                                class="w-full bg-black text-white py-4 rounded-xl flex items-center justify-center font-black text-sm shadow-md transition transform hover:scale-[1.02]">
+                                <i class="fa-solid fa-phone mr-3"></i> CALL TO NEGOTIATE
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Trust Card -->
+                    <div class="bg-blue-600 p-6 rounded-xl text-white">
+                        <div class="flex items-center gap-4 mb-3">
+                            <i class="fa-solid fa-shield-halved text-3xl"></i>
+                            <h3 class="font-bold">BUO Safety Tips</h3>
+                        </div>
+                        <ul class="text-[11px] space-y-2 opacity-90">
+                            <li><i class="fa-solid fa-check mr-2"></i> Inspect property before any payment.</li>
+                            <li><i class="fa-solid fa-check mr-2"></i> Only pay to BUO-Verified Escrow accounts.</li>
+                            <li><i class="fa-solid fa-check mr-2"></i> Report suspicious agents immediately.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t mt-20 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-xs text-gray-400">&copy; 2024 BUO Properties & Autos Lagos | Abuja. <br> Powered by BUO
+                Multi-Vendor System.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

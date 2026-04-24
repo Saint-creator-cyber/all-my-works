@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <title>Login/Register | saint_da_vendor Marketplace</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0e1221;
+      --surface: #151b34;
+      --surface-soft: #1e2747;
+      --text: #f5f7ff;
+      --muted: #a2aec7;
+      --accent: #7f5af0;
+      --accent-soft: rgba(127, 90, 240, 0.15);
+      --border: rgba(255, 255, 255, 0.08);
+      --error: #ff6b6b;
+      --success: #51cf66;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(-45deg, #0f0f0f, #23395d, #4b1212, #1a1a1a, #4b1212, #0f3c09, #a41479, #00f0ff, #fff);
+      background-size: 400% 400%;
+      animation: gradientBG 10s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+
+
+    .page {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      cursor: default;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 48px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .brand span {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    nav a,
+    .button {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: var(--accent);
+      transition: transform 0.2s ease, background 0.2s ease;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      background: #6246ea;
+    }
+
+    .auth-container {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .auth-header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .auth-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-group input.error {
+      border-color: var(--error);
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 0.85rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .password-strength {
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    .strength-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    .strength-weak {
+      background: var(--error);
+      width: 33%;
+    }
+
+    .strength-medium {
+      background: #ffd43b;
+      width: 66%;
+    }
+
+    .strength-strong {
+      background: var(--success);
+      width: 100%;
+    }
+
+    .auth-button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      margin-bottom: 16px;
+    }
+
+    .auth-button:hover {
+      background: #6246ea;
+    }
+
+    .auth-button:disabled {
+      background: var(--muted);
+      cursor: not-allowed;
+    }
+
+    .auth-button.loading {
+      position: relative;
+      color: transparent;
+    }
+
+    .auth-button.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid var(--text);
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .remember-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+
+    .remember-row label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .remember-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
+    .forgot-link {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    .auth-toggle {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .auth-toggle a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .auth-toggle a:hover {
+      text-decoration: underline;
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .message.error {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+
+    .message.success {
+      background: rgba(81, 207, 102, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .footer {
+      text-align: center;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: var(--accent);
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 24px 16px;
+      }
+
+      .auth-container {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <a href="home menu.html" style="text-decoration: none;">
+        <div class="brand">
+          <span></span>
+          saint_da_vendor
+        </div>
+      </a>
+      <nav>
+        <a class="button" href="home menu.html">Home</a>
+        <a class="button" href="shop.html">Shop</a>
+      </nav>
+    </header>
+
+    <div class="auth-container">
+      <div id="loginForm">
+        <div class="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to your saint_da_vendor account</p>
+        </div>
+
+        <div id="loginMessage" class="message"></div>
+
+        <form id="loginFormElement">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" name="email" required>
+            <div class="error-message" id="loginEmailError">Please enter a valid email address</div>
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" name="password" required>
+            <div class="error-message" id="loginPasswordError">Password is required</div>
+          </div>
+
+          <div class="remember-row">
+            <label><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="auth-button" id="loginButton">Sign In</button>
+        </form>
+
+        <div class="auth-toggle">
+          <p>Don't have an account? </p>
+          <a href="#" id="showRegister">Create Account</a>
+          <p>Click the card behind to Register</p>
+        </div>
+      </div>
+
+      <div id="registerForm" style="display: none;">
+        <div class="auth-header">
+          <h1>Create Account</h1>
+          <p>Join saint_da_vendor marketplace</p>
+        </div>
+
+        <div id="registerMessage" class="message"></div>
+
+        <form id="registerFormElement">
+          <div class="form-group">
+            <label for="registerUsername">Username</label>
+            <input type="text" id="registerUsername" name="username" required minlength="6" maxlength="10">
+            <div class="error-message" id="registerUsernameError">Username must be 6-10 characters</div>
+          </div>
+
+          <div class="form-group">
+            <label for="registerEmail">Email Address</label>
+            <input type="email" id="registerEmail" name="email" required>
+            <div class="error-message" id="registerEmailError">Please enter a valid email address</div>
+          </div>
+
+          <div class="form-group">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" name="password" required minlength="8">
+            <div class="password-strength">
+              <div class="strength-bar">
+                <div class="strength-fill" id="passwordStrength"></div>
+              </div>
+              <small id="passwordHint">Password must contain at least one uppercase letter, one lowercase letter, one
+                number, and one special character (@#$%)</small>
+            </div>
+            <div class="error-message" id="registerPasswordError">Password must be at least 8 characters with letters,
+              numbers, and special characters</div>
+          </div>
+
+          <button type="submit" class="auth-button" id="registerButton">Create Account</button>
+        </form>
+
+        <div class="auth-toggle">
+          <p>Already have an account? <a href="#" id="showLogin">Sign in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div>© 2026 saint_da_vendor. All rights reserved.</div>
+      <div>
+        <a href="home menu.html">Home</a> |
+        <a href="shop.html">Shop</a> |
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+
+
+    // Mock user database (in real app, this would be server-side)
+    const users = JSON.parse(localStorage.getItem('saint_da_vendor_users') || '[]');
+
+    // Form switching
+    document.getElementById('showRegister').addEventListener('click', function (e) {
+      e.preventDefault();
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'block';
+    });
+
+    document.getElementById('showLogin').addEventListener('click', function (e) {
+      e.preventDefault();
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+    });
+
+    // Password strength validation
+    function validatePassword(password) {
+      const hasLetters = /[a-zA-Z]/.test(password);
+      const hasNumbers = /\d/.test(password);
+      const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+      const isLongEnough = password.length >= 8;
+
+      return {
+        isValid: hasLetters && hasNumbers && hasSpecial && isLongEnough,
+        hasatleast1upper: /[A-Z]/.test(password),
+        hasatleast1lower: /[a-z]/.test(password),
+        hasNumbers,
+        hasSpecial,
+        isLongEnough
+      };
+    }
+
+    function updatePasswordStrength(password) {
+      const validation = validatePassword(password);
+      const strengthFill = document.getElementById('passwordStrength');
+      const hint = document.getElementById('passwordHint');
+
+      strengthFill.className = 'strength-fill';
+
+      if (password.length === 0) {
+        hint.textContent = 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@#$%)';
+        return;
+      }
+
+      if (validation.isValid) {
+        strengthFill.classList.add('strength-strong');
+        hint.textContent = 'Strong password!';
+        hint.style.color = 'var(--success)';
+      } else if (validation.hasatleast1upper && validation.hasatleast1lower && (validation.hasNumbers || validation.hasSpecial)) {
+        strengthFill.classList.add('strength-medium');
+        hint.textContent = 'Medium strength - add numbers and special characters';
+        hint.style.color = '#ffd43b';
+      } else {
+        strengthFill.classList.add('strength-weak');
+        hint.textContent = 'Weak password - must include letters, numbers, and special characters';
+        hint.style.color = 'var(--error)';
+      }
+    }
+
+    document.getElementById('registerPassword').addEventListener('input', function (e) {
+      updatePasswordStrength(e.target.value);
+    });
+
+    // Login form validation and submission
+    document.getElementById('loginFormElement').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const messageDiv = document.getElementById('loginMessage');
+      const emailError = document.getElementById('loginEmailError');
+      const passwordError = document.getElementById('loginPasswordError');
+
+      // Reset errors
+      messageDiv.style.display = 'none';
+      emailError.style.display = 'none';
+      passwordError.style.display = 'none';
+      document.getElementById('loginEmail').classList.remove('error');
+      document.getElementById('loginPassword').classList.remove('error');
+
+      let hasError = false;
+
+      // Validate email
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailError.style.display = 'block';
+        document.getElementById('loginEmail').classList.add('error');
+        hasError = true;
+      }
+
+      // Validate password
+      if (!password) {
+        passwordError.style.display = 'block';
+        document.getElementById('loginPassword').classList.add('error');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const btn = document.getElementById('loginButton');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+
+        const user = users.find(u => u.email === email);
+
+        if (!user) {
+          messageDiv.textContent = 'No account found with this email. Would you like to create one?';
+          messageDiv.className = 'message error';
+          messageDiv.style.display = 'block';
+          document.getElementById('showRegister').click();
+          document.getElementById('registerEmail').value = email;
+          return;
+        }
+
+        if (user.password !== password) {
+          messageDiv.textContent = 'Incorrect password. Please try again.';
+          messageDiv.className = 'message error';
+          messageDiv.style.display = 'block';
+          return;
+        }
+
+        localStorage.setItem('saint_da_vendor_current_user', JSON.stringify(user));
+        messageDiv.textContent = `Welcome back, ${user.username}!`;
+        messageDiv.className = 'message success';
+        messageDiv.style.display = 'block';
+
+        setTimeout(() => {
+          window.location.href = 'home menu.html';
+        }, 1500);
+      }, 800);
+    });
+
+    // Register form validation and submission
+    document.getElementById('registerFormElement').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('registerUsername').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const messageDiv = document.getElementById('registerMessage');
+      const usernameError = document.getElementById('registerUsernameError');
+      const emailError = document.getElementById('registerEmailError');
+      const passwordError = document.getElementById('registerPasswordError');
+
+      // Reset errors
+      messageDiv.style.display = 'none';
+      usernameError.style.display = 'none';
+      emailError.style.display = 'none';
+      passwordError.style.display = 'none';
+      document.getElementById('registerUsername').classList.remove('error');
+      document.getElementById('registerEmail').classList.remove('error');
+      document.getElementById('registerPassword').classList.remove('error');
+
+      let hasError = false;
+
+      // Validate username
+      if (!username || username.length < 3 || username.length > 20) {
+        usernameError.style.display = 'block';
+        document.getElementById('registerUsername').classList.add('error');
+        hasError = true;
+      }
+
+      // Validate email
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailError.style.display = 'block';
+        document.getElementById('registerEmail').classList.add('error');
+        hasError = true;
+      }
+
+      // Check if email already exists
+      if (users.some(u => u.email === email)) {
+        emailError.textContent = 'An account with this email already exists';
+        emailError.style.display = 'block';
+        document.getElementById('registerEmail').classList.add('error');
+        hasError = true;
+      }
+
+      // Validate password
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.isValid) {
+        passwordError.style.display = 'block';
+        document.getElementById('registerPassword').classList.add('error');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const btn = document.getElementById('registerButton');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+
+        const newUser = {
+          username,
+          email,
+          password,
+          createdAt: new Date().toISOString()
+        };
+
+        users.push(newUser);
+        localStorage.setItem('saint_da_vendor_users', JSON.stringify(users));
+
+        messageDiv.textContent = 'Account created successfully! Redirecting...';
+        messageDiv.className = 'message success';
+        messageDiv.style.display = 'block';
+
+        setTimeout(() => {
+          document.getElementById('showLogin').click();
+          document.getElementById('loginEmail').value = email;
+        }, 1500);
+      }, 1000);
+    });
+
+    // Real-time validation
+    document.getElementById('loginEmail').addEventListener('input', function () {
+      document.getElementById('loginEmailError').style.display = 'none';
+      this.classList.remove('error');
+    });
+
+    document.getElementById('loginPassword').addEventListener('input', function () {
+      document.getElementById('loginPasswordError').style.display = 'none';
+      this.classList.remove('error');
+    });
+
+    document.getElementById('registerUsername').addEventListener('input', function () {
+      document.getElementById('registerUsernameError').style.display = 'none';
+      this.classList.remove('error');
+    });
+
+    document.getElementById('registerEmail').addEventListener('input', function () {
+      document.getElementById('registerEmailError').style.display = 'none';
+      this.classList.remove('error');
+    });
+
+    document.getElementById('registerPassword').addEventListener('input', function () {
+      document.getElementById('registerPasswordError').style.display = 'none';
+      this.classList.remove('error');
+    });
+
+  </script>
+</body>
+
+</html>

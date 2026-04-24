@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAINT | Elite Dashboard</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        /* --- BRANDING & CORE STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: #050505;
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+        }
+
+        .logo-area {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #D4AF37;
+        }
+
+        .user-menu {
+            position: relative;
+            cursor: pointer;
+            color: #D4AF37;
+            font-weight: 600;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background: #111;
+            border: 1px solid #D4AF37;
+            width: 220px;
+            flex-direction: column;
+            padding: 10px;
+            z-index: 2000;
+        }
+
+        .dropdown a {
+            padding: 12px;
+            border-bottom: 1px solid #222;
+        }
+
+        .logout-btn {
+            color: #ff4b2b !important;
+        }
+
+        /* HOME / LANDING SECTION */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://unsplash.com');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            color: #D4AF37;
+            margin: 20px 0;
+        }
+
+        .brand-story {
+            padding: 100px 10%;
+            text-align: center;
+            background: #0a0a0a;
+            line-height: 1.8;
+        }
+
+        .brand-story h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #D4AF37;
+            margin-bottom: 30px;
+        }
+
+        .brand-story p {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            color: #bbb;
+            font-size: 1.1rem;
+        }
+
+        /* SHOP SECTION */
+        .shop-container {
+            padding: 120px 5% 60px;
+            display: none;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .p-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .p-card:hover {
+            border-color: #D4AF37;
+            transform: translateY(-10px);
+        }
+
+        .p-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .p-info {
+            padding: 25px;
+        }
+
+        .p-price {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 15px 0;
+            color: #fff;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .btn-buy {
+            background: #D4AF37;
+            color: #000;
+        }
+
+        .btn-buy:hover {
+            background: #f3d17a;
+        }
+
+        /* SHIMMER ANIMATION */
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+            transition: 0.7s;
+        }
+
+        .shimmer:hover::after {
+            left: 130%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo-area" onclick="showPage('home')">
+            <h2 style="font-family: 'Playfair Display'; letter-spacing: 4px; color: #D4AF37;">SAINT</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="showPage('home')">Discover</a></li>
+            <li><a href="#" onclick="showPage('shop')">The Shop</a></li>
+            <li class="user-menu" id="userMenu">
+                <span id="nav-user-name">Menu ⌵</span>
+                <div class="dropdown" id="profileDropdown">
+                    <a href="#" onclick="showPage('shop')">View Collection</a>
+                    <a href="#" onclick="logout()" class="logout-btn">Terminate Session (Logout)</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- LANDING PAGE -->
+    <section id="home">
+        <div class="hero">
+            <p style="letter-spacing: 5px; color: #888;">PREMIUM ACQUISITIONS</p>
+            <h1>Excellence In Motion</h1>
+            <button class="btn btn-buy shimmer" style="width: auto;" onclick="showPage('shop')">ENTER THE
+                INVENTORY</button>
+        </div>
+
+        <div class="brand-story">
+            <h2>Our Philosophy</h2>
+            <p>SAINT represents the intersection of high-performance automotive engineering and architectural mastery.
+                We don't just list assets; we curate the portfolio of the modern elite.</p>
+            <p>Every vehicle in our fleet and every residence in our catalog has passed a 150-point "Saint Standard"
+                inspection. From the carbon-fiber weaves of a bespoke Italian supercar to the marble finishes of a
+                Beverly Hills villa, we ensure absolute perfection.</p>
+            <p>Join the inner circle. Experience a seamless acquisition process backed by global logistics and secure
+                financial protocols.</p>
+        </div>
+    </section>
+
+    <!-- THE SHOP -->
+    <section id="shop" class="shop-container">
+        <h2 style="font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 40px; text-align: center;">The
+            Current Collection</h2>
+        <div class="product-grid" id="mainGrid">
+            <!-- Injected by JS -->
+        </div>
+    </section>
+
+    <!-- PAYSTACK SCRIPT -->
+    <script src="https://paystack.co"></script>
+
+    <script>
+        const inventory = [
+            { id: 1, type: 'Car', brand: 'Lamborghini', model: 'Aventador SVJ', price: 517700, img: 'https://unsplash.com' },
+            { id: 2, type: 'House', brand: 'Bel Air', model: 'Ultra-Modern Villa', price: 12500000, img: 'https://unsplash.com' },
+            { id: 3, type: 'Car', brand: 'Porsche', model: '911 GT3 RS', price: 223800, img: 'https://unsplash.com' },
+            { id: 4, type: 'House', brand: 'Aspen', model: 'Mountain Retreat', price: 8200000, img: 'https://unsplash.com' }
+        ];
+
+        function showPage(pageId) {
+            const home = document.getElementById('home');
+            const shop = document.getElementById('shop');
+
+            if (pageId === 'home') {
+                home.style.display = 'flex';
+                shop.style.display = 'none';
+                window.scrollTo(0, 0);
+            } else {
+                home.style.display = 'none';
+                shop.style.display = 'block';
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function renderShop() {
+            const grid = document.getElementById('mainGrid');
+            grid.innerHTML = inventory.map(item => `
+                <div class="p-card">
+                    <img src="${item.img}" class="p-img" alt="${item.model}">
+                    <div class="p-info">
+                        <small style="color: #D4AF37; text-transform: uppercase; letter-spacing: 2px;">${item.type}</small>
+                        <h3 style="font-family: 'Playfair Display'; font-size: 1.5rem; margin: 10px 0;">${item.brand} ${item.model}</h3>
+                        <p class="p-price">$${item.price.toLocaleString()}</p>
+                        <button class="btn btn-buy shimmer" onclick="payWithPaystack(${item.price}, '${item.model}')">SECURE NOW</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function payWithPaystack(amount, model) {
+            const userEmail = localStorage.getItem('saint_user_email') || 'client@saint.com';
+
+            let handler = PaystackPop.setup({
+                key: 'pk_test_1a726939d1cc05595a180eb3575f64d57be33a18', // YOUR PUBLIC KEY
+                email: userEmail,
+                amount: amount * 100, // Amount in kobo (Subunit)
+                currency: 'NGN', // Note: Test keys usually work best with NGN
+                ref: 'SAINT-' + Math.floor((Math.random() * 1000000000) + 1),
+                metadata: {
+                    custom_fields: [{ display_name: "Asset Model", variable_name: "model", value: model }]
+                },
+                callback: function (response) {
+                    alert('Payment successful. Transaction Reference: ' + response.reference);
+                },
+                onClose: function () {
+                    alert('Acquisition process terminated.');
+                }
+            });
+            handler.openIframe();
+        }
+
+        function logout() {
+            localStorage.removeItem('saint_user_email');
+            localStorage.removeItem('saint_user_password');
+            alert("Security Access Terminated.");
+            window.location.href = "buologin.html";
+        }
+
+        // Dropdown toggle
+        document.getElementById('userMenu').onclick = (e) => {
+            e.stopPropagation();
+            const dd = document.getElementById('profileDropdown');
+            dd.style.display = dd.style.display === 'flex' ? 'none' : 'flex';
+        };
+
+        // Close dropdown when clicking outside
+        window.onclick = () => { document.getElementById('profileDropdown').style.display = 'none'; };
+
+        renderShop();
+    </script>
+
+</body>
+
+</html>
