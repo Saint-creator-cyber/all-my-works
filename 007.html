@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>SAINT | Fontend Web Developer | Skills &Portfolio</title>
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent-blue: #00d2ff;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+        }
+
+        body {
+            background: linear-gradient(#000, #f06, rgb(37, 27, 223));
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+        }
+
+        /* Sidebar Navigation */
+        nav {
+            width: 80px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+            position: fixed;
+            height: 100vh;
+            z-index: 10;
+        }
+
+        .nav-item {
+            margin-bottom: 30px;
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover {
+            opacity: 1;
+            color: var(--accent-blue);
+        }
+
+        /* Main Content Container */
+        main {
+            margin-left: 80px;
+            padding: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+        }
+
+        /* Hero Section */
+        #hero {
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-blue);
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px var(--accent-blue);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 10px 0;
+        }
+
+        h1 span {
+            color: var(--accent-blue);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+        }
+
+        .btns {
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .primary {
+            background: var(--accent-blue);
+            border: none;
+            color: #000;
+        }
+
+        .secondary {
+            background: transparent;
+            border: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
+            margin-left: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
+        }
+
+        /* Grid Layout for Skills/Portfolio */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .sub-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Skills Progress Bars */
+        .skill-bar {
+            margin-bottom: 15px;
+        }
+
+        .bar-bg {
+            background: #333;
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        .bar-fill {
+            background: var(--accent-blue);
+            height: 100%;
+            border-radius: 5px;
+            width: 0;
+            transition: width 1.5s ease-out;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class='nav-item'>🏠</div>
+        <div class='nav-item'>👤</div>
+        <div class='nav-item'>💻</div>
+        <div class='nav-item'>🎓</div>
+        <div class='nav-item'>✉️</div>
+    </nav>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section id='hero'>
+            <img src='https://i.pinimg.com/736x/b9/4a/67/b94a675abdd600cc5af11eaaf230ed9f.jpg' alt='Profile'
+                class='profile-img'>
+            <h1>Hi, I'm <span>SAINT</span></h1>
+            <p class='subtitle'>I'm a Fontend Developer</p>
+            <p>I create beautiful, responsive web experiences using modern technologies.<br>
+                I design a beautiful web,just fontend.</p>
+            <div class='btns'>
+                <a href='#' class='btn primary'>View My Work</a>
+                <a href='#' class='btn secondary'>Download CV</a>
+            </div>
+        </section>
+
+        <!-- SKILLS & PORTFOLIO GRID -->
+        <div class='grid-container'>
+            <!-- Skills Section -->
+            <section id='skills'>
+                <h3>My Skills</h3>
+                <div class='skill-bar'>
+                    <span>HTML</span>
+                    <div class='bar-bg'>
+                        <div class='bar-fill' style='width: 90%;'></div>
+                    </div>
+                </div>
+                <div class='skill-bar'>
+                    <span>CSS</span>
+                    <div class='bar-bg'>
+                        <div class='bar-fill' style='width: 95%;'></div>
+                    </div>
+                </div>
+                <div class='skill-bar'>
+                    <span>JavaScript</span>
+                    <div class='bar-bg'>
+                        <div class='bar-fill' style='width: 80%;'></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Portfolio Section -->
+            <section id='portfolio'>
+                <h3>My Portfolio</h3>
+                <div class='sub-card'>
+                    <strong>Modern E-Commerce</strong>
+                    <p style='font-size: 12px; color: var(--text-dim);'>Built with React & Tailwind</p>
+                </div>
+                <br>
+                <div class='sub-card'>
+                    <strong>Task Management App</strong>
+                    <p style='font-size: 12px; color: var(--text-dim);'>Clean HTML,CSS & JS code with Glassmorphism</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- EDUCATION & LANGUAGES GRID -->
+        <div class='grid-container'>
+            <section id='education'>
+                <h3>Education</h3>
+                <p>🎓 <strong>Bachelor of Computer Science</strong><br>Adekunle Ajasin University Akungba-Akoko</p>
+            </section>
+
+            <section id='languages'>
+                <h3>Languages</h3>
+                <p>🇺🇸 English - Native</p>
+                <p>🇪🇸 Spanish - Fluent</p>
+                <p>🇩🇪 German - Intermediate</p>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Trigger skill bar animation when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            const fills = document.querySelectorAll('.bar-fill');
+            fills.forEach(fill => {
+                const targetWidth = fill.style.width;
+                fill.style.width = '0';
+                setTimeout(() => {
+                    fill.style.width = targetWidth;
+                }, 200);
+            });
+        });
+    </script>
+</body>
+
+</html>

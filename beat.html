@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Afrobeat Multi-Studio + Drum Fill</title>
+    <script src="https://cloudflare.com"></script>
+    <style>
+        :root {
+            --accent: #00ffcc;
+            --bg: #0a0a0a;
+            --panel: #151515;
+            --text: #e0e0e0;
+            --fill-color: #ffcc00;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .studio-wrap {
+            width: 95%;
+            max-width: 1000px;
+            background: var(--panel);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #333;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        canvas {
+            width: 100%;
+            height: 90px;
+            background: #000;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #222;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 120px repeat(16, 1fr);
+            gap: 5px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .inst-label {
+            align-self: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .step {
+            aspect-ratio: 1;
+            background: #222;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid #333;
+            min-width: 30px;
+            transition: 0.1s;
+        }
+
+        .step.active {
+            background: var(--accent);
+            box-shadow: 0 0 12px var(--accent);
+            border-color: #fff;
+        }
+
+        .step.playing {
+            border: 2px solid white;
+            transform: scale(1.1);
+            z-index: 5;
+        }
+
+        .step:nth-child(4n+2) {
+            background: #2a2a2a;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            background: #111;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .btn-row {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 11px;
+            transition: 0.2s;
+        }
+
+        #playBtn {
+            background: var(--accent);
+            color: #000;
+        }
+
+        #fillBtn {
+            background: var(--fill-color);
+            color: #000;
+        }
+
+        #recBtn {
+            background: #ff4400;
+            color: #fff;
+        }
+
+        .sub-btn {
+            background: #333;
+            color: #fff;
+        }
+
+        .upload-btn {
+            background: #007bff;
+            color: white;
+            position: relative;
+        }
+
+        .upload-btn input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slider-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        select {
+            background: #222;
+            color: var(--accent);
+            border: 1px solid #444;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        input[type=range] {
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="studio-wrap">
+        <canvas id="viz"></canvas>
+        <div class="grid" id="sequencer"></div>
+        <div class="dashboard">
+            <div class="btn-row">
+                <button id="playBtn">Play Session</button>
+                <button id="fillBtn">Instant Drum Fill</button>
+                <button id="recBtn">Export MP3</button>
+                <button class="upload-btn">Upload Tag <input type="file" id="tagLoad" accept="audio/*"></button>
+                <button id="rndBtn" class="sub-btn">Randomize</button>
+                <button id="clrBtn" class="sub-btn">Clear Grid</button>
+            </div>
+            <div class="slider-box"><label>Tempo: <span id="bpmL">105</span> BPM</label><input type="range" id="bpm"
+                    min="80" max="140" value="105"></div>
+            <div class="slider-box"><label>Vocal Tag Pitch</label><input type="range" id="tPit" min="0.5" max="2"
+                    step="0.05" value="1"></div>
+            <div class="slider-box">
+                <label>Keyboard Chord</label>
+                <select id="chordSelect">
+                    <option value="A_MIN">A Minor</option>
+                    <option value="D_MIN">D Minor</option>
+                    <option value="G_MAJ">G Major</option>
+                    <option value="C_MAJ">C Major</option>
+                </select>
+            </div>
+            <div class="slider-box"><label>Reverb Space</label><input type="range" id="mRev" min="0" max="1" step="0.05"
+                    value="0.25"></div>
+            <div class="slider-box"><label>Master Volume</label><input type="range" id="mVol" min="0" max="1"
+                    step="0.05" value="0.7"></div>
+        </div>
+    </div>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const master = audioCtx.createGain();
+        const verb = audioCtx.createConvolver();
+        const verbG = audioCtx.createGain();
+        const viz = audioCtx.createAnalyser();
+        const recD = audioCtx.createMediaStreamDestination();
+
+        master.connect(viz); master.connect(verb); verb.connect(verbG);
+        viz.connect(audioCtx.destination); viz.connect(recD);
+        verbG.connect(audioCtx.destination); verbG.connect(recD);
+
+        // --- SYNTHS ---
+        const playKick = (t) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(0.01, t + 0.4);
+            g.gain.setValueAtTime(1, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+            o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.4);
+        };
+
+        const playGuitar = (t) => {
+            const b = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.02, audioCtx.sampleRate);
+            const d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+            const n = audioCtx.createBufferSource(); n.buffer = b;
+            const f = audioCtx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 3000;
+            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+            n.connect(f); f.connect(g); g.connect(master); n.start(t);
+        };
+
+        const chords = { A_MIN: [440, 523.25, 659.25], D_MIN: [293.66, 349.23, 440], G_MAJ: [392, 493.88, 587.33], C_MAJ: [261.63, 329.63, 392] };
+        const playKeys = (t) => {
+            chords[document.getElementById('chordSelect').value].forEach(freq => {
+                const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+                o.type = 'sine'; o.frequency.setValueAtTime(freq, t);
+                g.gain.setValueAtTime(0.15, t); g.gain.exponentialRampToValueAtTime(0.01, t + 1.2);
+                o.connect(g); g.connect(master); o.start(t); o.stop(t + 1.2);
+            });
+        };
+
+        const playBass = (t) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'triangle'; o.frequency.setValueAtTime(55, t);
+            g.gain.setValueAtTime(0.8, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.6);
+            o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.6);
+        };
+
+        const playRim = (t) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'triangle'; o.frequency.setValueAtTime(600, t);
+            g.gain.setValueAtTime(0.3, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
+            o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.1);
+        };
+
+        let tagBuf = null;
+        const playTag = (t) => { if (tagBuf) { const s = audioCtx.createBufferSource(); s.buffer = tagBuf; s.playbackRate.value = document.getElementById('tPit').value; s.connect(master); s.start(t); } };
+
+        const insts = [
+            { n: 'Kick', p: playKick }, { n: 'Guitar', p: playGuitar },
+            { n: 'E-Piano', p: playKeys }, { n: 'Sub Bass', p: playBass },
+            { n: 'Rimshot', p: playRim }, { n: 'Tag', p: playTag }
+        ];
+
+        // --- ENGINE ---
+        const gridEl = document.getElementById('sequencer');
+        insts.forEach((ins, idx) => {
+            const l = document.createElement('div'); l.className = 'inst-label'; l.innerText = ins.n; gridEl.appendChild(l);
+            for (let i = 0; i < 16; i++) {
+                const s = document.createElement('div'); s.className = 'step'; s.dataset.ins = idx; s.dataset.step = i;
+                s.onclick = () => s.classList.toggle('active'); gridEl.appendChild(s);
+            }
+        });
+
+        let curS = 0, isP = false, nextT = 0;
+        function scheduler() {
+            while (nextT < audioCtx.currentTime + 0.1) {
+                const sps = 60 / document.getElementById('bpm').value / 4;
+                document.querySelectorAll('.step').forEach(s => s.classList.toggle('playing', parseInt(s.dataset.step) === curS));
+                insts.forEach((ins, idx) => {
+                    const el = document.querySelector(`.step[data-ins="${idx}"][data-step="${curS}"]`);
+                    if (el && el.classList.contains('active')) ins.p(nextT);
+                });
+                nextT += sps; curS = (curS + 1) % 16;
+            }
+            if (isP) requestAnimationFrame(scheduler);
+        }
+
+        // --- UI LOGIC ---
+        document.getElementById('playBtn').onclick = (e) => {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            isP = !isP; e.target.innerText = isP ? 'Stop' : 'Play Session';
+            if (isP) { nextT = audioCtx.currentTime; scheduler(); }
+        };
+
+        document.getElementById('fillBtn').onclick = () => {
+            const fillSteps = [12, 13, 14, 15]; // Last 4 boxes
+            fillSteps.forEach(s => {
+                document.querySelector(`.step[data-ins="4"][data-step="${s}"]`).classList.add('active'); // Rimshot
+                if (s % 2 === 0) document.querySelector(`.step[data-ins="0"][data-step="${s}"]`).classList.add('active'); // Kick
+            });
+        };
+
+        document.getElementById('tagLoad').onchange = async (e) => { if (e.target.files[0]) tagBuf = await audioCtx.decodeAudioData(await e.target.files[0].arrayBuffer()); };
+        document.getElementById('clrBtn').onclick = () => document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('rndBtn').onclick = () => document.querySelectorAll('.step').forEach(s => { if (Math.random() > 0.92) s.classList.add('active'); });
+
+        // REVERB & VIZ
+        (function () {
+            const l = audioCtx.sampleRate * 2.5; const b = audioCtx.createBuffer(2, l, audioCtx.sampleRate);
+            for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); for (let i = 0; i < l; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / l, 3); } verb.buffer = b;
+        })();
+        const vCtx = document.getElementById('viz').getContext('2d');
+        function draw() {
+            requestAnimationFrame(draw); const d = new Uint8Array(viz.frequencyBinCount); viz.getByteFrequencyData(d);
+            vCtx.fillStyle = '#000'; vCtx.fillRect(0, 0, 1000, 90);
+            d.forEach((v, i) => { vCtx.fillStyle = `rgb(0, ${v + 150}, ${v + 100})`; vCtx.fillRect(i * 6, 90 - v / 3, 4, v / 3); });
+        }
+        draw();
+
+        // MP3 EXPORT
+        const rec = new MediaRecorder(recD.stream); let ch = [];
+        rec.ondataavailable = e => ch.push(e.data);
+        rec.onstop = async () => {
+            const b = await audioCtx.decodeAudioData(await (new Blob(ch)).arrayBuffer());
+            const enc = new lamejs.Mp3Encoder(1, b.sampleRate, 128);
+            const r = b.getChannelData(0); const i16 = new Int16Array(r.length);
+            for (let i = 0; i < r.length; i++) i16[i] = r[i] < 0 ? r[i] * 32768 : r[i] * 32767;
+            const mp3 = []; for (let i = 0; i < i16.length; i += 1152) { const c = enc.encodeBuffer(i16.subarray(i, i + 1152)); if (c.length > 0) mp3.push(c); }
+            const f = enc.flush(); if (f.length > 0) mp3.push(f);
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(mp3, { type: 'audio/mp3' })); a.download = 'afro_session.mp3'; a.click(); ch = [];
+        };
+        document.getElementById('recBtn').onclick = (e) => {
+            if (rec.state === 'inactive') { rec.start(); e.target.innerText = 'Capturing...'; }
+            else { rec.stop(); e.target.innerText = 'Export MP3'; }
+        };
+        document.getElementById('bpm').oninput = e => document.getElementById('bpmL').innerText = e.target.value;
+        document.getElementById('mVol').oninput = e => master.gain.value = e.target.value;
+        document.getElementById('mRev').oninput = e => verbG.gain.value = e.target.value;
+    </script>
+</body>
+
+</html>

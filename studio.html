@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Pro - BandLab Edition</title>
+    <style>
+        /* PRO THEME: Deep Grays & Neon Accents */
+        :root {
+            --bg-deep: #0e0e10;
+            --bg-card: #1c1c1f;
+            --neon: #00ffcc;
+            --red-rec: #ff4d4d;
+            --text-dim: #92929d;
+            --accent-blue: #007bff;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #fff;
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .studio-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+            width: 500px;
+            border: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 20px;
+            letter-spacing: 1px;
+            color: #fff;
+            margin: 0;
+            text-align: left;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 11px;
+            margin-bottom: 20px;
+            text-align: left;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Visualizer Panel */
+        #visualizer {
+            width: 100%;
+            height: 80px;
+            background: #000;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #252525;
+        }
+
+        /* Sliders & Panels */
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .panel {
+            background: #252529;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: left;
+            border: 1px solid #2f2f33;
+            transition: border 0.3s;
+        }
+
+        .panel:hover {
+            border-color: var(--neon);
+        }
+
+        label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .val-text {
+            float: right;
+            color: var(--neon);
+            font-size: 12px;
+        }
+
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--neon);
+            height: 4px;
+            background: #3a3a3e;
+            border-radius: 2px;
+        }
+
+        /* Piano */
+        .piano {
+            display: flex;
+            height: 100px;
+            background: #000;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #252525;
+        }
+
+        .key {
+            flex: 1;
+            border: 1px solid #111;
+            border-radius: 0 0 5px 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .white {
+            background: #e2e2e2;
+            z-index: 1;
+        }
+
+        .black {
+            background: #1a1a1a;
+            width: 20px;
+            height: 55px;
+            margin-left: -10px;
+            margin-right: -10px;
+            z-index: 2;
+            border-radius: 0 0 3px 3px;
+        }
+
+        .key:active {
+            background: var(--neon);
+        }
+
+        /* Buttons */
+        .main-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+            flex: 1;
+            transition: 0.2s;
+            background: #3a3a3e;
+            color: #fff;
+        }
+
+        #rec-btn {
+            background: var(--red-rec);
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+        }
+
+        #loop-btn.active {
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon);
+        }
+
+        .drum-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .pad {
+            height: 60px;
+            background: #252529;
+            color: var(--neon);
+            border: 1px solid #333;
+            font-size: 10px;
+        }
+
+        .pad:active {
+            background: var(--neon);
+            color: #000;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-size: 11px;
+            color: var(--text-dim);
+            text-align: center;
+        }
+
+        #download-link {
+            display: none;
+            text-align: center;
+            color: var(--neon);
+            text-decoration: none;
+            border: 1px solid var(--neon);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="studio-card">
+        <h1>BANDLAB EDITION</h1>
+        <p class="subtitle">Cloud Studio • Pro Mastering • Looper</p>
+
+        <canvas id="visualizer"></canvas>
+
+        <div class="piano">
+            <div class="key white" onmousedown="playNote(261.63)"></div>
+            <div class="key black" onmousedown="playNote(277.18)"></div>
+            <div class="key white" onmousedown="playNote(293.66)"></div>
+            <div class="key black" onmousedown="playNote(311.13)"></div>
+            <div class="key white" onmousedown="playNote(329.63)"></div>
+            <div class="key white" onmousedown="playNote(349.23)"></div>
+            <div class="key black" onmousedown="playNote(369.99)"></div>
+            <div class="key white" onmousedown="playNote(392.00)"></div>
+            <div class="key black" onmousedown="playNote(415.30)"></div>
+            <div class="key white" onmousedown="playNote(440.00)"></div>
+            <div class="key black" onmousedown="playNote(466.16)"></div>
+            <div class="key white" onmousedown="playNote(493.88)"></div>
+        </div>
+
+        <div class="panel-grid">
+            <div class="panel"><label>Doubler <span id="double-val" class="val-text">0%</span></label><input
+                    type="range" id="double-slider" min="0" max="100" value="0" oninput="updateDouble(this.value)">
+            </div>
+            <div class="panel"><label>Pitch <span id="pitch-val" class="val-text">Norm</span></label><input type="range"
+                    id="pitch-slider" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updatePitch(this.value)">
+            </div>
+        </div>
+
+        <div class="panel-grid">
+            <div class="panel"><label>Echo <span id="fx-val" class="val-text">0%</span></label><input type="range"
+                    id="fx-slider" min="0" max="80" value="0" oninput="updateFX(this.value)"></div>
+            <div class="panel"><label>Cleaner <span id="gate-val" class="val-text">Off</span></label><input type="range"
+                    id="gate-slider" min="-100" max="-30" value="-100" oninput="updateGate(this.value)"></div>
+        </div>
+
+        <div class="panel"><label>Tempo <span id="bpm-val" class="val-text">120 BPM</span></label><input type="range"
+                id="bpm-slider" min="60" max="200" value="120" oninput="updateBPM(this.value)"></div>
+
+        <div class="main-controls">
+            <button id="rec-btn" onclick="startRecording()">● REC</button>
+            <button id="stop-btn" onclick="stopRecording()" disabled>■ STOP</button>
+            <button id="loop-btn" onclick="toggleLoop()">LOOP BEAT</button>
+        </div>
+
+        <div class="drum-grid">
+            <button class="pad" onmousedown="playDrum('kick')">KICK</button>
+            <button class="pad" onmousedown="playDrum('snare')">SNARE</button>
+            <button class="pad" onmousedown="playDrum('clap')">CLAP</button>
+            <button class="pad" onmousedown="playDrum('hat')">HAT</button>
+        </div>
+
+        <p id="status">Studio Engine Ready</p>
+        <a id="download-link">DOWNLOAD MASTER TRACK</a>
+    </div>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let mediaRecorder, audioChunks = [], loopInterval, isLooping = false, currentBPM = 120;
+
+        const analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        const noiseGate = audioCtx.createDynamicsCompressor(); noiseGate.threshold.value = -100;
+        const doubleGain = audioCtx.createGain(), doubleDelay = audioCtx.createDelay();
+        doubleDelay.delayTime.value = 0.02; doubleGain.gain.value = 0;
+        const echoGain = audioCtx.createGain(), delay = audioCtx.createDelay(), feedback = audioCtx.createGain();
+        delay.delayTime.value = 0.3; feedback.gain.value = 0.4; echoGain.gain.value = 0;
+
+        delay.connect(feedback); feedback.connect(delay); delay.connect(echoGain);
+        doubleDelay.connect(doubleGain);
+        [echoGain, doubleGain, audioCtx.destination].forEach(n => { if (n !== audioCtx.destination) n.connect(audioCtx.destination) });
+
+        function updateDouble(v) { doubleGain.gain.value = v / 100; document.getElementById('double-val').innerText = v + '%'; }
+        function updateGate(v) { noiseGate.threshold.value = v; document.getElementById('gate-val').innerText = v == -100 ? "Off" : "On"; }
+        function updatePitch(v) { document.getElementById('pitch-val').innerText = v < 1 ? "Deep" : v > 1 ? "High" : "Norm"; }
+        function updateBPM(v) { currentBPM = v; document.getElementById('bpm-val').innerText = v + ' BPM'; if (isLooping) { clearInterval(loopInterval); startLoopInterval(); } }
+        function updateFX(v) { echoGain.gain.value = v / 100; document.getElementById('fx-val').innerText = v + '%'; }
+
+        function playNote(freq) {
+            const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+            osc.connect(g); g.connect(audioCtx.destination); g.connect(analyser);
+            osc.frequency.value = freq; g.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+        }
+
+        function playDrum(type) {
+            const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+            osc.connect(g); g.connect(audioCtx.destination); g.connect(analyser);
+            const now = audioCtx.currentTime;
+            if (type === 'kick') { osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.4); }
+            else if (type === 'snare') { osc.type = 'triangle'; osc.frequency.setValueAtTime(250, now); }
+            else { osc.type = 'square'; osc.frequency.setValueAtTime(800, now); }
+            g.gain.setValueAtTime(0.4, now); g.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+            osc.start(); osc.stop(now + 0.4);
+        }
+
+        function startLoopInterval() {
+            let s = 0; loopInterval = setInterval(() => {
+                if (s % 4 === 0) playDrum('kick'); else if (s % 4 === 2) playDrum('snare'); else playDrum('hat');
+                s++;
+            }, (60 / currentBPM) * 500);
+        }
+
+        function toggleLoop() {
+            isLooping = !isLooping; const btn = document.getElementById('loop-btn');
+            if (isLooping) { btn.innerText = "STOP BEAT"; btn.classList.add('active'); startLoopInterval(); }
+            else { btn.innerText = "LOOP BEAT"; btn.classList.remove('active'); clearInterval(loopInterval); }
+        }
+
+        async function startRecording() {
+            try {
+                if (audioCtx.state === 'suspended') await audioCtx.resume();
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const source = audioCtx.createMediaStreamSource(stream);
+                source.connect(noiseGate); noiseGate.connect(analyser); noiseGate.connect(delay); noiseGate.connect(doubleDelay);
+                mediaRecorder = new MediaRecorder(stream); audioChunks = [];
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/wav' });
+                    document.getElementById('download-link').href = URL.createObjectURL(blob);
+                    document.getElementById('download-link').style.display = "block";
+                    document.getElementById('status').innerText = "Session Mastered!";
+                };
+                mediaRecorder.start(); document.getElementById('rec-btn').disabled = true; document.getElementById('stop-btn').disabled = false;
+                document.getElementById('status').innerText = "LIVE RECORDING...";
+            } catch (e) { alert("Mic required."); }
+        }
+
+        function stopRecording() { mediaRecorder.stop(); document.getElementById('rec-btn').disabled = false; document.getElementById('stop-btn').disabled = true; if (isLooping) toggleLoop(); }
+
+        function draw() {
+            requestAnimationFrame(draw); analyser.getByteFrequencyData(dataArray);
+            const canvas = document.getElementById('visualizer'), ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            let x = 0; for (let i = 0; i < dataArray.length / 2; i++) {
+                let h = dataArray[i] / 2; ctx.fillStyle = `rgb(0, 255, 204)`;
+                ctx.fillRect(x, canvas.height - h, 2, h); x += 3;
+            }
+        }
+        draw();
+    </script>
+</body>
+
+</html>

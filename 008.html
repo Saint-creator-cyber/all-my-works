@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Saint | Full Stack Portfolio</title>
+    <style>
+        /* --- CORE DESIGN SYSTEM --- */
+        :root {
+            --dark-bg: #030712;
+            --card-navy: #0f172a;
+            --cyan-accent: #22d3ee;
+            --text-light: #f8fafc;
+            --text-dim: #94a3b8;
+            --gradient: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* --- STICKY HEADER --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: var(--cyan-accent);
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dim);
+            margin: 0 15px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--cyan-accent);
+        }
+
+        .btn-sm {
+            padding: 8px 18px;
+            border-radius: 8px;
+            background: var(--cyan-accent);
+            color: #000;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* --- HERO SECTION --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        #hero {
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 100px;
+            gap: 60px;
+        }
+
+        .hero-text {
+            flex: 1.2;
+        }
+
+        .hero-text h1 {
+            font-size: 4.5rem;
+            margin: 10px 0;
+        }
+
+        .hero-text span {
+            color: var(--cyan-accent);
+        }
+
+        .profile-frame {
+            flex: 0.8;
+            position: relative;
+            background: var(--card-navy);
+            border-radius: 20px;
+            padding: 5px;
+            box-shadow: 0 0 40px rgba(34, 211, 238, 0.15);
+        }
+
+        .profile-frame img {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+        }
+
+        /* --- STATS & SERVICES --- */
+        .stats-row {
+            display: flex;
+            gap: 40px;
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat h2 {
+            color: var(--cyan-accent);
+            font-size: 2.2rem;
+            margin: 0;
+        }
+
+        .stat p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin: 5px 0 0;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        h2.sec-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 50px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            background: var(--card-navy);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--cyan-accent);
+        }
+
+        .service-card .num {
+            font-size: 3rem;
+            font-weight: 800;
+            opacity: 0.05;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+
+        /* --- UTILS --- */
+        .btn-main {
+            padding: 14px 28px;
+            border-radius: 12px;
+            display: inline-block;
+            font-weight: 700;
+            text-decoration: none;
+            margin-right: 15px;
+            transition: 0.3s;
+        }
+
+        .filled {
+            background: var(--cyan-accent);
+            color: #000;
+        }
+
+        .outline {
+            border: 2px solid #334155;
+            color: var(--text-light);
+        }
+
+        .filled:hover {
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+        }
+
+        @media (max-width: 900px) {
+            #hero {
+                flex-direction: column-reverse;
+                text-align: center;
+                padding-top: 150px;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .stats-row {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            header nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">SAINT<span>Dev</span></div>
+        <nav>
+            <a href="#hero">Home</a>
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#portfolio">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <a href="#contact" class="btn-sm">Get in Touch</a>
+    </header>
+
+    <div class="container">
+        <!-- HERO SECTION -->
+        <section id="hero">
+            <div class="hero-text">
+                <p style="color: var(--cyan-accent); font-weight: 600;">Welcome to my portfolio</p>
+                <h1>Hi, I'm <span>Farhan</span></h1>
+                <p class="subtitle" style="font-size: 1.4rem; color: var(--text-dim);">Full Stack Web Developer</p>
+                <p>I craft high-performance web applications using modern tech like React, Node.js, and TypeScript.</p>
+                <div style="margin-top: 35px;">
+                    <a href="#portfolio" class="btn-main filled">View My Work</a>
+                    <a href="#contact" class="btn-main outline">Get in Touch</a>
+                </div>
+            </div>
+            <div class="profile-frame">
+                <!-- Replace with your actual photo -->
+                <img src="https://i.pinimg.com/736x/f2/0f/64/f20f64426d3e9420b2cb174a2ec998c5.jpg" alt="saint">
+            </div>
+        </section>
+
+        <!-- STATS ROW -->
+        <div class="stats-row">
+            <div class="stat">
+                <h2>50+</h2>
+                <p>Projects Done</p>
+            </div>
+            <div class="stat">
+                <h2>3+</h2>
+                <p>Years Experience</p>
+            </div>
+            <div class="stat">
+                <h2>20+</h2>
+                <p>Technologies</p>
+            </div>
+        </div>
+
+        <!-- SERVICES SECTION -->
+        <section id="services">
+            <h2 class="sec-title">Services I Offer</h2>
+            <div class="grid">
+                <div class="service-card">
+                    <span class="num">01</span>
+                    <h3>Custom Web Dev</h3>
+                    <p>Tailored websites built with high-performance frameworks and clean code.</p>
+                </div>
+                <div class="service-card">
+                    <span class="num">02</span>
+                    <h3>Full-Stack Apps</h3>
+                    <p>Complete end-to-end solutions including databases and server-side logic.</p>
+                </div>
+                <div class="service-card">
+                    <span class="num">03</span>
+                    <h3>API Development</h3>
+                    <p>Building secure, scalable RESTful and GraphQL APIs for seamless data flow.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Simple animation trigger for cards
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(30px)';
+            observer.observe(card);
+        });
+    </script>
+</body>
+
+</html>

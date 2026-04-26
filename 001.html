@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Rainbow Orbit Form</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+
+    <style>
+        @import url('https://googleapis.com');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- THE NEON ORBIT CONTAINER --- */
+        .orbit-wrapper {
+            position: relative;
+            width: 420px;
+            height: 580px;
+            background: #000;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* The Spinning Rainbow Light */
+        .orbit-wrapper::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background-image: conic-gradient(#ff0000, #ff8000, #ffff00, #00ff00,
+                    #00ffff, #0000ff, #8000ff, #ff00ff, #ff0000);
+            animation: rotate 3s linear infinite, colorShift 5s linear infinite;
+        }
+
+        /* The Neon Glow (Blur Layer) */
+        .glow-overlay {
+            position: absolute;
+            inset: -10px;
+            background-image: conic-gradient(#ff0000, #ff8000, #ffff00, #00ff00,
+                    #00ffff, #0000ff, #8000ff, #ff00ff, #ff0000);
+            animation: rotate 3s linear infinite, colorShift 5s linear infinite;
+            filter: blur(25px);
+            /* This creates the neon bloom */
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        /* Inner Mask to create the "Thin Line" effect */
+        .orbit-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            background: #0d0d0d;
+            border-radius: 16px;
+            z-index: 1;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes colorShift {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        /* --- STACKED FORMS --- */
+        .main-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-box {
+            position: absolute;
+            width: 100%;
+            padding: 40px;
+            transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            color: #fff;
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            pointer-events: none;
+        }
+
+        .form-box.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: all;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(to right, #00ffff, #ff00ff);
+            webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 12px 35px 12px 5px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: 0.3s ease;
+            color: #888;
+            pointer-events: none;
+        }
+
+        .input-group input:focus~label,
+        .input-group input:valid~label {
+            top: -12px;
+            font-size: 0.8rem;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff;
+        }
+
+        .input-group i {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus~i {
+            color: #00ffff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #8000ff, #00ffff);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.4s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .switch-text {
+            font-size: 0.85rem;
+            margin-top: 30px;
+            text-align: center;
+            color: #bbb;
+        }
+
+        .switch-text a {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .switch-text a:hover {
+            text-shadow: 0 0 8px #00ffff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="orbit-wrapper">
+        <div class="glow-overlay"></div> <!-- Neon Glow Layer -->
+
+        <div class="main-container">
+
+            <!-- Signup Form (Active) -->
+            <div class="form-box active" id="signupBox">
+                <h2>Join Us</h2>
+                <form>
+                    <div class="input-group">
+                        <input type="text" required>
+                        <label>Username</label>
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" required>
+                        <label>Email Address</label>
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" required>
+                        <label>Password</label>
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <button type="submit" class="btn-submit">Sign Up</button>
+                </form>
+                <p class="switch-text">
+                    Already a member? <a href="#" id="toLogin">Login Now</a>
+                </p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="form-box" id="loginBox">
+                <h2>Welcome</h2>
+                <form>
+                    <div class="input-group">
+                        <input type="email" required>
+                        <label>Email Address</label>
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" required>
+                        <label>Password</label>
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <button type="submit" class="btn-submit">Login</button>
+                </form>
+                <p class="switch-text">
+                    Need an account? <a href="#" id="toSignup">Register Here</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const signupBox = document.getElementById('signupBox');
+        const loginBox = document.getElementById('loginBox');
+        const toLogin = document.getElementById('toLogin');
+        const toSignup = document.getElementById('toSignup');
+
+        toLogin.onclick = (e) => {
+            e.preventDefault();
+            signupBox.classList.remove('active');
+            loginBox.classList.add('active');
+        }
+
+        toSignup.onclick = (e) => {
+            e.preventDefault();
+            loginBox.classList.remove('active');
+            signupBox.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

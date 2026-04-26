@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Beyond Boundaries</title>
+
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        background-color: #0a0a0a;
+        color: white;
+        overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 8%;
+        background: transparent;
+        position: absolute;
+        width: 100%;
+        z-index: 10;
+    }
+
+    .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 30px;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .signup {
+        background: white;
+        color: black;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Hero */
+    .hero {
+        /* Existing properties... */
+        height: 100vh;
+        /* Sets height to 100% of the viewport */
+        width: 100%;
+        /* Sets width to 100% of the page */
+
+        /* These three lines ensure the image fills the space perfectly */
+        background-size: cover;
+        /* Forces image to fill the area without stretching */
+        background-position: center;
+        /* Centers the image */
+        background-repeat: no-repeat;
+        /* Prevents the image from tiling */
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 8%;
+        position: relative;
+    }
+
+    .hero-content {
+        text-align: center;
+    }
+
+
+    .hero h1 {
+        font-size: 4rem;
+        line-height: 1.1;
+    }
+
+    .green-text {
+        color: #4CAF50;
+    }
+
+    .hero-actions {
+        margin-top: 30px;
+        display: flex;
+        gap: 20px;
+    }
+
+    .discover {
+        background: #ff7b00;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Search Bar */
+    .search-container {
+        position: absolute;
+        bottom: -40px;
+        left: 8%;
+        right: 8%;
+    }
+
+    .search-bar {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: black;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-input label {
+        display: block;
+        font-size: 0.7rem;
+        color: #666;
+        font-weight: bold;
+    }
+
+    .search-input select,
+    .search-input input {
+        border: none;
+        font-size: 1rem;
+        outline: none;
+    }
+
+    /* Carousel */
+    .destination-section {
+        padding: 100px 8%;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .carousel-container {
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .carousel-track {
+        display: flex;
+        gap: 20px;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .card {
+        min-width: 300px;
+        background: #1a1a1a;
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    .card img {
+        width: 100%;
+        border-radius: 10px;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .nav-btn {
+        background: #ff7b00;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    /* Testimonials */
+    .testimonials {
+        padding: 60px 8%;
+        text-align: center;
+    }
+
+    .testimonial-box {
+        display: none;
+        padding: 40px;
+        background: #1a1a1a;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .testimonial-box.active {
+        display: block;
+    }
+
+    /* Footer */
+    footer {
+        padding: 50px 8%;
+        border-top: 1px solid #333;
+        text-align: center;
+        color: #888;
+    }
+
+    .policy-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        list-style: none;
+        margin-top: 15px;
+    }
+
+    .policy-links a {
+        color: #888;
+        text-decoration: none;
+        font-size: 0.8rem;
+    }
+</style>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">T</div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">International</a></li>
+            <li><a href="#">Nigeria</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+        <div class="auth-buttons">
+            <button class="login">Log in</button>
+            <button class="signup">Sign up</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" <div class="hero-content">
+        <h1>Travel Beyond <br><span class="green-text">Boundaries</span></h1>
+        <div class="hero-actions">
+            <button class="discover">Discover more</button>
+            <button class="watch-video">▶ Watch Video</button>
+        </div>
+        </div>
+
+        <!-- Search Bar Component -->
+        <div class="search-container">
+            <div class="search-bar">
+                <div class="search-input">
+                    <label>Choose destination</label>
+                    <select>
+                        <option>Select Location</option>
+                    </select>
+                </div>
+                <div class="search-input">
+                    <label>Select dates</label>
+                    <input type="date">
+                </div>
+                <div class="search-input">
+                    <label>Add members</label>
+                    <input type="number" placeholder="0">
+                </div>
+                <button class="search-btn">Search</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Destination Carousel -->
+    <section class="destination-section">
+        <button class="nav-btn prev" onclick="moveCarousel(-1)">&#10094;</button>
+        <div class="carousel-container">
+            <div class="carousel-track" id="track">
+                <div class="card">
+                    <img src="https://i.pinimg.com/1200x/ba/33/0e/ba330e624300fcde831e8549adf65e25.jpg" alt="Kalahari">
+                    <h3>Kalahari ⭐⭐⭐⭐⭐</h3>
+                    <p>A smart touring and holiday app that brings inspiration...</p>
+                </div>
+                <div class="card">
+                    <img src="https://i.pinimg.com/736x/e9/fe/39/e9fe3948733d709d8e04a159504d7d80.jpg" alt="Botswana">
+                    <h3>Botswana ⭐⭐⭐⭐⭐</h3>
+                    <p>Discover world-class safari experiences and breathtaking landscapes...</p>
+                </div>
+                <div class="card">
+                    <img src="https://i.pinimg.com/1200x/99/86/35/99863513d26e208239ea282f7d967348.jpg" alt="Kenya">
+                    <h3>Kenya ⭐⭐⭐⭐⭐</h3>
+                    <p>Experience the Great Migration and vibrant local culture...</p>
+                </div>
+            </div>
+        </div>
+        <button class="nav-btn next" onclick="moveCarousel(1)">&#10095;</button>
+    </section>
+
+    <!-- Testimonials Slider -->
+    <section class="testimonials">
+        <h2>Google Reviews</h2>
+        <div class="testimonial-slider">
+            <div class="testimonial-box active">
+                <p>"This app makes my vacation fun and also left me with unforgettable memories..."</p>
+            </div>
+            <div class="testimonial-box">
+                <p>"The interface is clean and super easy to use. A must-have for anyone who travels."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; <span id="year"></span> TravelBrand. All rights reserved.</p>
+            <ul class="policy-links">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Cookie Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Dynamic Footer Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 2. Destination Carousel Logic
+        let currentPosition = 0;
+        const track = document.getElementById('track');
+
+        function moveCarousel(direction) {
+            const cardWidth = 320; // card width + gap
+            const maxScroll = -(track.children.length - 3) * cardWidth;
+
+            currentPosition += direction * -cardWidth;
+
+            // Bounds checking
+            if (currentPosition > 0) currentPosition = 0;
+            if (currentPosition < maxScroll) currentPosition = maxScroll;
+
+            track.style.transform = `translateX(${currentPosition}px)`;
+        }
+
+        // 3. Testimonial Slider Logic
+        let testimonialIndex = 0;
+        const testimonials = document.querySelectorAll('.testimonial-box');
+
+        function rotateTestimonials() {
+            testimonials.forEach(t => t.classList.remove('active'));
+            testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+            testimonials[testimonialIndex].classList.add('active');
+        }
+
+        // Auto-rotate every 5 seconds
+        setInterval(rotateTestimonials, 5000);
+
+
+    </script>
+</body>
+
+</html>

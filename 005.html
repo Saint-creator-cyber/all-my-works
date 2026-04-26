@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirPods Max Product Slider</title>
+    <style>
+        /* CSS STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, sans-serif;
+            cursor: default;
+        }
+
+        body {
+            background-color: #8da18a;
+            /* Default Green Background */
+            transition: background 0.5s ease;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .slider-main {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+        }
+
+        .slider-content-wrap {
+            color: white;
+            max-width: 500px;
+            z-index: 2;
+        }
+
+        .logo img {
+            width: 30%;
+            margin-bottom: 0px;
+            opacity: 10;
+            /* Makes the image 50% transparent */
+
+
+        }
+
+        .heading-style-2 {
+            font-size: 3rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .slider-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .heading-style-2-price {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-icons img {
+            width: 24px;
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        /* Image Slider Area */
+        .slider-images {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slider-image {
+            position: absolute;
+            width: 100%;
+            height: auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 10s ease-in-out;
+
+        }
+
+        .slider-image.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-family: sans-serif;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="slider-main">
+        <div class="container">
+            <!-- Logo Section -->
+            <div class="logo">
+                <a href="#"><img src="https://i.pinimg.com/736x/d4/a5/60/d4a5608f9d00569d53c28c74fbd6133a.jpg"
+                        alt="logo">
+                    <p>
+                        <h1>SAINT</h1>
+                    </p>
+                </a>
+
+
+            </div>
+
+            <!-- Content Section -->
+            <div class="slider-content-wrap">
+                <div class="slider-content">
+                    <h2 class="heading-style-2">Apple AirPods Max Wireless Over-Ear Headphones.</h2>
+                    <p>Active Noise Cancelling, Transparency Mode, Spatial Audio, Digital Crown for Volume Control.
+                        Bluetooth Headphones for iPhone.</p>
+                    <h3 class="heading-style-2-price">$779.99</h3>
+
+                    <!-- Social Icons -->
+                    <div class="social-icons">
+                        <a href="#"><img src="https://i.pinimg.com/736x/b8/3d/05/b83d053902adaaa700395ce0cd102dec.jpg"
+                                alt="instagram"></a>
+                        <a href="#"><img src="https://i.pinimg.com/1200x/d1/bf/a9/d1bfa97a3dd4a8b4eedea7d53f0f3e7a.jpg"
+                                alt="facebook"></a>
+                        <a href="#"><img src="https://i.pinimg.com/736x/e3/9f/24/e39f24fb419fc2102a997bddbc5aa4ee.jpg"
+                                alt="twitter"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Image Section -->
+        <div class="slider-images">
+            <img class="slider-image active" src="https://www.yudiz.com/codepen/headphone-slider/green.png"
+                alt="green headphone" data-color="#8da18a">
+            <img class="slider-image" src="https://www.yudiz.com/codepen/headphone-slider/blue.png" alt="blue headphone"
+                data-color="#7e96b3">
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <p>&copy; <span id="year"></span> SAINT_ACCESORIES. All rights reserved.</p>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href=" #">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </footer>
+
+
+    </section>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        // JAVASCRIPT LOGIC
+        const images = document.querySelectorAll('.slider-image');
+        const body = document.body;
+        let currentIndex = 0;
+
+        // Simple function to cycle through images and change background color
+        function updateSlider() {
+            // Remove active class from current
+            images[currentIndex].classList.remove('active');
+
+            // Move to next index
+            currentIndex = (currentIndex + 1) % images.length;
+
+            // Add active class to new image
+            const nextImage = images[currentIndex];
+            nextImage.classList.add('active');
+
+            // Change body background color based on data-color attribute
+            body.style.backgroundColor = nextImage.getAttribute('data-color');
+        }
+
+        // Cycle every 3 seconds
+        setInterval(updateSlider, 3000);
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideBooking + Firebase</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .booking-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            margin: 0 auto 20px auto;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        #locate-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .vehicle-selection {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        #fare-display {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #28a745;
+            margin: 15px 0;
+        }
+
+        button#book-now {
+            width: 100%;
+            padding: 15px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #map {
+            height: 300px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="booking-container">
+        <h2>Book a Ride</h2>
+        <div class="input-group">
+            <input type="text" id="origin-input" placeholder="Pickup location">
+            <button type="button" id="locate-btn" onclick="useCurrentLocation()">📍 Use Current Location</button>
+        </div>
+        <div class="input-group">
+            <input type="text" id="destination-input" placeholder="Destination">
+        </div>
+        <div class="vehicle-selection">
+            <label><input type="radio" name="vehicle" value="car" checked onclick="getDrivingDistance()"> 🚗 Car</label>
+            <label><input type="radio" name="vehicle" value="bike" onclick="getDrivingDistance()"> 🏍️ Bike</label>
+        </div>
+        <div id="fare-display">Estimated Fare: ₦0.00</div>
+        <button id="book-now" onclick="confirmBooking()">Request Ride</button>
+    </div>
+    <div id="map"></div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://gstatic.com";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://gstatic.com";
+
+        // TODO: Replace with your actual Firebase project config
+        const firebaseConfig = {
+            apiKey: "YOUR_FIREBASE_API_KEY",
+            authDomain: "YOUR_://firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_://appspot.com",
+            messagingSenderId: "YOUR_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Expose function to window so the button can call it
+        window.confirmBooking = async () => {
+            const origin = document.getElementById('origin-input').value;
+            const dest = document.getElementById('destination-input').value;
+            const fare = document.getElementById('fare-display').innerText;
+            const vehicle = document.querySelector('input[name="vehicle"]:checked').value;
+
+            if (!origin || !dest || fare === "Estimated Fare: ₦0.00") {
+                alert("Please complete the booking details first.");
+                return;
+            }
+
+            try {
+                const docRef = await addDoc(collection(db, "bookings"), {
+                    pickup: origin,
+                    destination: dest,
+                    fare: fare,
+                    vehicleType: vehicle,
+                    status: "pending",
+                    timestamp: serverTimestamp()
+                });
+                alert("Ride requested! Your booking ID is: " + docRef.id);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                alert("Booking failed. Check your Firebase console.");
+            }
+        };
+    </script>
+
+    <!-- Google Maps -->
+    <script src="https://googleapis.com" async defer></script>
+
+    <script>
+        let map, originAutocomplete, destAutocomplete;
+        const rates = { car: { base: 500, perKm: 150 }, bike: { base: 200, perKm: 80 } };
+
+        function initApp() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 6.5244, lng: 3.3792 }, zoom: 12,
+            });
+            originAutocomplete = new google.maps.places.Autocomplete(document.getElementById('origin-input'));
+            destAutocomplete = new google.maps.places.Autocomplete(document.getElementById('destination-input'));
+            originAutocomplete.addListener('place_changed', getDrivingDistance);
+            destAutocomplete.addListener('place_changed', getDrivingDistance);
+        }
+
+        function useCurrentLocation() {
+            if (!navigator.geolocation) return alert("Not supported");
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ location: { lat: pos.coords.latitude, lng: pos.coords.longitude } }, (res) => {
+                    document.getElementById('origin-input').value = res[0].formatted_address;
+                    getDrivingDistance();
+                });
+            });
+        }
+
+        function getDrivingDistance() {
+            const origin = document.getElementById('origin-input').value;
+            const dest = document.getElementById('destination-input').value;
+            if (!origin || !dest) return;
+            new google.maps.DirectionsService().route({
+                origin: origin, destination: dest, travelMode: 'DRIVING'
+            }, (res, status) => {
+                if (status === 'OK') {
+                    const km = res.routes[0].legs[0].distance.value / 1000;
+                    const type = document.querySelector('input[name="vehicle"]:checked').value;
+                    const fare = rates[type].base + (km * rates[type].perKm);
+                    document.getElementById('fare-display').innerText = `Estimated Fare: ₦${fare.toFixed(2)}`;
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

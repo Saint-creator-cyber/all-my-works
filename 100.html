@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glow Architecture Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 1. ANIMATED BACKGROUND WITH NEON LINES & PULSING DOTS */
+        .bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .lines {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            background:
+                /* Neon Blue Glowing Window Lines */
+                linear-gradient(105deg, transparent 45%, rgba(0, 162, 255, 0.4) 45.1%, rgba(0, 162, 255, 0.6) 45.5%, transparent 45.9%),
+                linear-gradient(105deg, transparent 54%, rgba(0, 162, 255, 0.4) 54.1%, rgba(0, 162, 255, 0.6) 54.5%, transparent 54.9%);
+            background-size: 100% 100%;
+            filter: drop-shadow(0 0 10px rgba(0, 162, 255, 0.8));
+            animation: slideBg 15s linear infinite;
+        }
+
+        /* Pulsing Dot Field */
+        .dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle, #fff 1px, transparent 1px),
+                radial-gradient(circle, #fff 1px, transparent 1px);
+            background-size: 80px 80px;
+            background-position: 0 0, 40px 40px;
+            opacity: 0.3;
+            animation: pulseDots 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes slideBg {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-20%);
+            }
+        }
+
+        @keyframes pulseDots {
+            0% {
+                opacity: 0.1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0.4;
+                transform: scale(1.05);
+            }
+        }
+
+        /* 2. CARD WRAPPER */
+        .wrapper {
+            position: relative;
+            width: 420px;
+            height: 560px;
+            z-index: 10;
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            padding: 45px;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: white;
+            cursor: pointer;
+        }
+
+        /* STACKING & GLOW LOGIC */
+        .card-signup {
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .card-login {
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.02);
+            transform: translateX(70px) scale(0.88);
+            opacity: 0.4;
+        }
+
+        /* SWAPPED STATE */
+        .wrapper.swapped .card-signup {
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.02);
+            transform: translateX(-70px) scale(0.88);
+            opacity: 0.4;
+        }
+
+        .wrapper.swapped .card-login {
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+            transform: translateX(0) scale(1);
+            opacity: 1;
+        }
+
+        /* 3. FORM UI */
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 35px;
+            font-weight: 700;
+        }
+
+        .field {
+            margin-bottom: 22px;
+        }
+
+        label {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: rgba(0, 162, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            background: #fff;
+            color: #000;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .peek-label {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 5px;
+            font-weight: 900;
+            color: rgba(0, 162, 255, 0.8);
+        }
+
+        .swapped .card-signup .peek-label {
+            right: auto;
+            left: 18px;
+            transform: translateY(-50%) rotate(180deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-container">
+        <div class="dots"></div>
+        <div class="lines"></div>
+    </div>
+
+    <div class="wrapper" id="mainWrapper">
+
+        <!-- LOGIN CARD -->
+        <div class="card card-login" id="loginCard">
+            <span class="peek-label">Login</span>
+            <h2>Welcome Back</h2>
+            <form>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" placeholder="Email Address">
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+                <button type="button" class="btn">Sign In</button>
+            </form>
+        </div>
+
+        <!-- SIGNUP CARD -->
+        <div class="card card-signup" id="signupCard">
+            <span class="peek-label">Register</span>
+            <h2>Create Account</h2>
+            <form>
+                <div class="field">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Name">
+                </div>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" placeholder="Email">
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+                <button type="button" class="btn">Get Started</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        const wrapper = document.getElementById('mainWrapper');
+        const cards = document.querySelectorAll('.card');
+
+        cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                const isSignupFront = !wrapper.classList.contains('swapped');
+
+                // If you click the peeking card, swap them
+                if ((card.id === 'loginCard' && isSignupFront) || (card.id === 'signupCard' && !isSignupFront)) {
+                    wrapper.classList.toggle('swapped');
+                }
+            });
+        });
+
+        // Block event bubbling so inputs/buttons don't trigger the swap
+        document.querySelectorAll('input, button').forEach(el => {
+            el.addEventListener('click', (e) => e.stopPropagation());
+        });
+    </script>
+</body>
+
+</html>

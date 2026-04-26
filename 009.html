@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>SAINT Dev | Frontend Developer Portfolio</title>
+    <style>
+        :root {
+            --dark-bg: #030712;
+            --card-navy: #0f172a;
+            --cyan-accent: #22d3ee;
+            --text-light: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+        }
+
+        .logo span {
+            color: var(--cyan-accent);
+        }
+
+        /* --- HERO --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        #hero {
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 80px;
+            gap: 50px;
+        }
+
+        .hero-text h1 {
+            font-size: 4.5rem;
+            margin: 10px 0;
+        }
+
+        .hero-text span {
+            color: var(--cyan-accent);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .primary {
+            background: var(--cyan-accent);
+            color: #000;
+        }
+
+        .github-link {
+            color: var(--text-dim);
+            font-size: 1.5rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .github-link:hover {
+            color: var(--cyan-accent);
+            transform: scale(1.1);
+        }
+
+        .profile-img {
+            flex: 0.8;
+            border-radius: 20px;
+            border: 2px solid var(--cyan-accent);
+            box-shadow: 0 0 30px rgba(34, 211, 238, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* --- PROJECT GALLERY --- */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .project-card {
+            background: var(--card-navy);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--cyan-accent);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .project-info {
+            padding: 20px;
+        }
+
+        /* --- MODAL (POPUP) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-navy);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            border: 1px solid var(--cyan-accent);
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: var(--text-dim);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            #hero {
+                flex-direction: column-reverse;
+                text-align: center;
+                padding-top: 120px;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .btn-group {
+                justify-content: center;
+            }
+        }
+
+        /* --- STATS & SERVICES --- */
+        .stats-row {
+            display: flex;
+            gap: 40px;
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat h2 {
+            color: var(--cyan-accent);
+            font-size: 2.2rem;
+            margin: 0;
+        }
+
+        .stat p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin: 5px 0 0;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        h2.sec-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 50px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            background: var(--card-navy);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--cyan-accent);
+        }
+
+        .service-card .num {
+            font-size: 3rem;
+            font-weight: 800;
+            opacity: 0.05;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">SAINT<span> Dev</span></div>
+        <nav style="display: flex; gap: 20px;">
+            <a href="#hero" style="color: white; text-decoration: none;">Home</a>
+            <a href="#portfolio" style="color: white; text-decoration: none;">Projects</a>
+        </nav>
+        <a href="https://github.com/Saint-creator-cyber" target="_blank" class="github-link">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+        </a>
+    </header>
+
+    <div class="container">
+        <!-- HERO -->
+        <section id="hero">
+            <div class="hero-text">
+                <p style="color: var(--cyan-accent); font-weight: 600;">Welcome to my digital space</p>
+                <h1>Hi, I'm <span>SAINT</span></h1>
+                <p class="subtitle" style="font-size: 1.5rem; color: var(--text-dim);">Frontend Developer</p>
+                <p>I build beautiful, responsive, and user-friendly web interfaces using modern technologies like React
+                    and Tailwind CSS.</p>
+                <div class="btn-group">
+                    <a href="https://x.com/SAINT_DA_VENDOR" class="btn primary">View My Work</a>
+                    <a href="https://github.com/Saint-creator-cyber" target="_blank" class="btn"
+                        style="border: 1px solid var(--text-dim); color: white;">GitHub Profile</a>
+                </div>
+            </div>
+            <div style="flex: 0.8;">
+                <!-- Replace with your image file -->
+                <img src="https://i.pinimg.com/736x/f2/0f/64/f20f64426d3e9420b2cb174a2ec998c5.jpg" class="profile-img"
+                    alt="SAINT Dev">
+            </div>
+        </section>
+
+        <!-- PORTFOLIO GALLERY -->
+        <section id="portfolio">
+            <h2 class="section-title">Projects</h2>
+            <div class="gallery-grid">
+                <div class="project-card"
+                    onclick="openModal('Weather App', 'A real-time weather tracking application using OpenWeather API.', 'HTML, CSS, JS')">
+                    <img src="https://i.pinimg.com/736x/23/e5/ae/23e5aec8d1233f83aa041cf58e15b4b1.jpg" alt="Project 1">
+                    <div class="project-info">
+                        <h3>Weather Tracker</h3>
+                        <p>Real-time weather data visualization.</p>
+                    </div>
+                </div>
+                <div class="project-card"
+                    onclick="openModal('NFT Marketplace', 'A modern frontend UI for exploring and buying digital art.', 'React, Framer Motion')">
+                    <img src="https://i.pinimg.com/1200x/24/4b/28/244b2874ce129d644ef2e07fd76de4e5.jpg" alt="Project 2">
+                    <div class="project-info">
+                        <h3>NFT UI Design</h3>
+                        <p>Clean, futuristic marketplace interface.</p>
+                    </div>
+                </div>
+                <div class="project-card"
+                    onclick="openModal('Portfolio Template', 'A high-performance portfolio site for creatives.', 'Next.js, Tailwind')">
+                    <img src="https://i.pinimg.com/1200x/af/f6/3a/aff63acbc2f370fd46da0be5f0904e39.jpg" alt="Project 3">
+                    <div class="project-info">
+                        <h3>Personal Portfolio</h3>
+                        <p>Speed-optimized site with smooth animations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- STATS ROW -->
+        <div class="stats-row">
+            <div class="stat">
+                <h2>50+</h2>
+                <p>Projects Done</p>
+            </div>
+            <div class="stat">
+                <h2>3+</h2>
+                <p>Years Experience</p>
+            </div>
+            <div class="stat">
+                <h2>20+</h2>
+                <p>Technologies</p>
+            </div>
+        </div>
+    </div>
+    <!-- SERVICES SECTION -->
+    <section id="services">
+        <h2 class="sec-title">Services I Offer</h2>
+        <div class="grid">
+            <div class="service-card">
+                <span class="num">01</span>
+                <h3>Custom Web Dev</h3>
+                <p>Tailored websites built with high-performance frameworks and clean code.</p>
+            </div>
+            <div class="service-card">
+                <span class="num">02</span>
+                <h3>Full-Stack Apps</h3>
+                <p>Complete end-to-end solutions including databases and server-side logic.</p>
+            </div>
+            <div class="service-card">
+                <span class="num">03</span>
+                <h3>API Development</h3>
+                <p>Building secure, scalable RESTful and GraphQL APIs for seamless data flow.</p>
+            </div>
+        </div>
+    </section>
+    </div>
+
+    <!-- PROJECT MODAL -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle" style="color: var(--cyan-accent);"></h2>
+            <p id="modalDesc"></p>
+            <p><strong>Tech Stack:</strong> <span id="modalTech" style="color: var(--text-dim);"></span></p>
+            <div style="margin-top: 25px;">
+                <a href="#" class="btn primary">Live Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 SAINT Dev | Built with Passion.</p>
+    </footer>
+
+    <script>
+        // Modal Logic
+        const modal = document.getElementById('projectModal');
+
+        function openModal(title, desc, tech) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modalTech').innerText = tech;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+
+</html>

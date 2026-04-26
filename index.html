@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saint_da_vendor | Secure Portal</title>
+    <style>
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(2deg);
+            }
+
+            /* Added subtle tilt */
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        .overlay-logo {
+            width: 120px;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+            animation: float 4s ease-in-out infinite;
+            /* Slower for a premium feel */
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .auth-container {
+            display: flex;
+            width: 900px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Image Side with Custom Overlay */
+        .image-side {
+            width: 45%;
+            position: relative;
+            background: url('https://unsplash.com') center/cover;
+        }
+
+        .overlay-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .overlay-logo {
+            width: 120px;
+            animation: float 3s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .slogan {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Form Side */
+        .form-side {
+            width: 55%;
+            padding: 50px;
+            color: white;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            margin-top: 20px;
+            background: #fff;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #23a6d5;
+            color: white;
+        }
+
+        .switch-text {
+            margin-top: 25px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <!-- Sidebar with Logo & Slogan Overlay -->
+        <div class="overlay-content">
+            <img src="https://icons.veryicon.com/png/o/business/chenk/my-contacts-2.png" alt="Logo"
+                class="overlay-logo">
+            <p class="slogan">LEVEL UP YOUR EXPERIENCE</p>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 5px;">Secure Assets. Legend Status.</p>
+        </div>
+
+    </div>
+
+    <div class="form-side">
+        <h2 id="form-title">SAINT_DA_VENDOR</h2>
+
+        <div id="signup-area">
+            <input type="text" id="s-user" placeholder="Username (6+ chars, a1@)">
+            <input type="email" id="s-email" placeholder="Gmail Address">
+            <input type="password" id="s-pass1" class="pw" placeholder="Password">
+            <input type="password" id="s-pass2" class="pw" placeholder="Confirm Password">
+            <button onclick="register()">CREATE ACCOUNT</button>
+            <p class="switch-text" onclick="swap()">Already a member? Login</p>
+        </div>
+
+        <div id="login-area" class="hidden">
+            <input type="email" id="l-email" placeholder="Gmail Address">
+            <input type="password" id="l-pass" placeholder="Password">
+            <button onclick="login()">ENTER STORE</button>
+            <p class="switch-text" onclick="swap()">Need an account? Sign Up</p>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        const complexRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+        const gmailRegex = /^[a-z0-9.]+@gmail\.com$/;
+
+        function swap() {
+            document.getElementById('signup-area').classList.toggle('hidden');
+            document.getElementById('login-area').classList.toggle('hidden');
+            document.getElementById('form-title').innerText = document.getElementById('signup-area').classList.contains('hidden') ? "LOGIN" : "SAINT_DA_VENDOR";
+        }
+
+        function register() {
+            const e = document.getElementById('s-email').value;
+            const p1 = document.getElementById('s-pass1').value;
+            const p2 = document.getElementById('s-pass2').value;
+
+            if (!gmailRegex.test(e)) return alert("Use a valid @gmail.com address.");
+            if (p1 !== p2) return alert("Passwords don't match.");
+            if (!complexRegex.test(p1)) return alert("Password must be 6+ chars with mixed symbols.");
+
+            localStorage.setItem('userEmail', e);
+            localStorage.setItem('userPass', p1);
+            alert("Registered! Now log in.");
+            swap();
+        }
+
+        function login() {
+            const e = document.getElementById('l-email').value;
+            const p = document.getElementById('l-pass').value;
+            if (e === localStorage.getItem('userEmail') && p === localStorage.getItem('userPass')) {
+                window.location.href = "home.html";
+            } else {
+                alert("Invalid Gmail or Password.");
+            }
+        }
+    </script>
+</body>
+
+</html>
